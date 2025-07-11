@@ -1,0 +1,16 @@
+services:
+  isale:
+    image: postgres:latest
+    container_name: isale
+    restart: on-failure
+    environment:
+      POSTGRES_DB: isale
+      POSTGRES_USER: graey
+      POSTGRES_PASSWORD: pyr@hornet0101
+    volumes:
+      - isale_data:/var/lib/postgresql/data
+    ports:
+      - '5440:5432'
+
+volumes:
+  isale_data:
