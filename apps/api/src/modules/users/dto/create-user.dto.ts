@@ -27,7 +27,7 @@ export class CreateUserDto {
   email: string;
 
   @ApiPropertyOptional({
-    example: 'becomingTheBest',
+    example: 'becoming@TheBest8',
   })
   @IsStrongPassword({
     minLength: 8,
@@ -45,11 +45,12 @@ export class CreateUserDto {
   @IsString()
   googleId: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: UserRoleEnum.USER,
     enum: UserRoleEnum,
     required: true,
   })
   @IsEnum(UserRoleEnum)
+  @IsOptional()
   role: UserRoleEnum;
 }

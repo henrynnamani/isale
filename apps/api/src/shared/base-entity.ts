@@ -9,7 +9,7 @@ export class BaseModel {
   @ApiProperty({
     example: 'test-id-uuid',
   })
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @ApiProperty({

@@ -21,6 +21,12 @@ export class User extends BaseModel {
     type: 'varchar',
     nullable: true,
   })
+  phoneNumber: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
   password: string;
 
   @Column({
@@ -32,6 +38,7 @@ export class User extends BaseModel {
   @Column({
     type: 'enum',
     enum: UserRoleEnum,
+    default: UserRoleEnum.USER
   })
   role: UserRoleEnum;
 }

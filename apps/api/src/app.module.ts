@@ -7,6 +7,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommonModule } from './shared/common.module';
 import dataSource from './database/datasource';
 import environmentValidation from './config/environment.validation';
+import { AuthModule } from './modules/auth/auth.module';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { DataResponseInterceptor } from './shared/interceptor/data-response.interceptor';
+import { TelegramModule } from './modules/telegram/telegram.module';
+import telegramConfig from './config/telegram.config';
+import paymentConfig from './config/payment.config';
+import { VendorsModule } from './modules/vendors/vendors.module';
+import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
+import cloudinaryConfig from './config/cloudinary.config';
 
 const ENV = process.env.NODE_ENV;
 
@@ -15,7 +24,7 @@ const ENV = process.env.NODE_ENV;
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: !ENV ? '.env' : `.env.${ENV}`,
-      load: [],
+      load: [telegramConfig, paymentConfig, cloudinaryConfig],
       validationSchema: environmentValidation,
     }),
     TypeOrmModule.forRootAsync({
@@ -33,8 +42,18 @@ const ENV = process.env.NODE_ENV;
     }),
     UsersModule,
     CommonModule,
+    VendorsModule,
+    AuthModule,
+    TelegramModule,
+    CloudinaryModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: DataResponseInterceptor,
+    },
+  ],
 })
 export class AppModule {}
