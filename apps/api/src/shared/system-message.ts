@@ -14,3 +14,5 @@ export const ERROR_UPLOADING_TO_CLOUDINARY =
 
 export const BRAND_EXISTS = (brand: string) => `Brand: ${brand} already exist`;
 export const BRAND_CREATED_SUCCESSFULLY = 'Brand successfully created';
+export const BRAND_DELETED_SUCCESSFULLY = 'Brand successfully deleted';
+export const BRAND_DOES_NOT_EXIST = (brand: string) => `Brand: ${brand} does not exist`;

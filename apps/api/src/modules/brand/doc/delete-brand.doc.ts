@@ -7,16 +7,16 @@ import {
 } from '@nestjs/swagger';
 import { CreateBrandDto } from '../dto/create-brand.dto';
 
-export const createbrandDoc = () => {
+export const deleteBrandDoc = () => {
   return applyDecorators(
     ApiOperation({
-      summary: 'Create New Brand',
+      summary: 'Delete Brand',
     }),
     // ApiBearerAuth(),
-    ApiBody({
-      type: CreateBrandDto,
+    ApiParam({
+      name: 'id',
+      example: '0de9ab4b-1d67-4264-bf3b-29f488a4fd8b',
+      description: 'ID of brand',
     }),
   );
 };
-
-// created-brand -> 330704be-f77c-442c-981c-cde3e52ffa62

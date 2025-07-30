@@ -9,29 +9,19 @@ import { Brand } from '../model/brand.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as SYS_MSG from '@/shared/system-message';
 import { create } from 'domain';
+import { BrandExistProvider } from '../providers/brand-exist.provider';
 
 @Injectable()
 export class BrandService {
   constructor(
     @InjectRepository(Brand)
     private readonly brandRepository: Repository<Brand>,
+    private readonly brandExistProvider: BrandExistProvider,
   ) {}
   async createBrand(createBrandDto: CreateBrandDto) {
-    try {
-      const brandExist = await this.brandRepository.findBy({
-        name: createBrandDto.name,
-      });
-
-      if (brandExist) {
-        throw new BadRequestException(
-          SYS_MSG.BRAND_EXISTS(createBrandDto.name),
-        );
-      }
-    } catch (err) {
-      throw new RequestTimeoutException(err, {
-        description: SYS_MSG.DB_CONNECTION_ERROR,
-      });
-    }
+    await this.brandExistProvider.checkBrandExist({
+      name: createBrandDto.name,
+    });
 
     const brand = this.brandRepository.create(createBrandDto);
 
@@ -49,7 +39,24 @@ export class BrandService {
     }
   }
 
-  async deleteBrand() {}
+  async deleteBrand(id: string) {
+    const brand = await this.brandExistProvider.checkBrandNotExist({ id });
+
+    try {
+      await this.brandRepository.softDelete({
+        id,
+      });
+
+      return {
+        data: brand,
+        message: SYS_MSG.BRAND_DELETED_SUCCESSFULLY,
+      };
+    } catch (err) {
+      throw new RequestTimeoutException(err, {
+        description: SYS_MSG.DB_CONNECTION_ERROR,
+      });
+    }
+  }
 }
 
 /**

@@ -37,7 +37,6 @@ RESTOCK PRODUCT -PATCH /products/:id
 VIEW PRODUCTS - GET /products
 
 <RAM>
-
 ADD RAM SIZE -POST /ram
 DELETE RAM SIZE -POST /ram/:id
 
@@ -46,9 +45,9 @@ ADD RAM SIZE -POST /rom
 DELETE RAM SIZE -POST /rom/:id
 
 <VENDOR>
-CREATE VENDOR -POST /vendors
-DEACTIVATE VENDOR -PATCH /vendors/:id
-VERIFY VENDOR -PATCH /vendors/:id
+CREATE VENDOR -POST /vendors ✅
+DEACTIVATE VENDOR -PATCH /vendors/:id/deactivate ✅
+VERIFY VENDOR -PATCH /vendors/:id/activate ✅
 VIEW VENDORS -GET /vendors
 
 <BRAND>
@@ -60,9 +59,9 @@ PATCH BRAND -PATCH /brand/:id
 ADD REVIEW -POST /product/review
 DELETE REVIEW - DELETE /product/review/:id
 
-<BANK>
+<!-- <BANK>
 ADD BANK -POST /bank
-DELETE BANK -DELETE /bank/:id
+DELETE BANK -DELETE /bank/:id -->
 
 <PAYMENT_METHOD>
 ADD PAYMENT METHOD -POST /payment/method
