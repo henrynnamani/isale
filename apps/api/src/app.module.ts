@@ -16,6 +16,7 @@ import paymentConfig from './config/payment.config';
 import { VendorsModule } from './modules/vendors/vendors.module';
 import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
 import cloudinaryConfig from './config/cloudinary.config';
+import { BrandModule } from './modules/brand/brand.module';
 
 const ENV = process.env.NODE_ENV;
 
@@ -46,6 +47,7 @@ const ENV = process.env.NODE_ENV;
     AuthModule,
     TelegramModule,
     CloudinaryModule,
+    BrandModule
   ],
   controllers: [AppController],
   providers: [

@@ -3,7 +3,6 @@ import {
   Injectable,
   RequestTimeoutException,
 } from '@nestjs/common';
-import { CreateVendorDto } from '../dto/create-vendor.dto';
 import { Repository } from 'typeorm';
 import { Vendor } from '../model/vendors.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -22,11 +21,11 @@ export class VendorsService {
   ) {}
 
   async createVendor(createVendorDto: CreateVendor) {
-    const vendorExists = await this.vendorExistProvider.checkVendorExist(
+    const vendorExist = await this.vendorExistProvider.checkVendorExistByChatId(
       createVendorDto.telegramChatId,
     );
 
-    if (vendorExists?.length > 0) {
+    if (vendorExist?.length > 0) {
       throw new BadRequestException(SYS_MSG.VENDOR_EXISTS);
     }
 
@@ -51,20 +50,53 @@ export class VendorsService {
     }
   }
 
-  async updateVendorLogoImage(chatId: number, logoImageUrl: string) {
-    const vendorExists = this.vendorExistProvider.checkVendorExist(chatId);
+  async activateVendor(id: string) {
+    const vendorExist = await this.vendorExistProvider.checkVendorExistById(id);
 
-    const updatedVendor = await this.vendorRepository.update(
-      { telegramChatId: chatId },
-      { logoImageUrl },
-    );
+    if (vendorExist?.length == 0) {
+      throw new BadRequestException(SYS_MSG.VENDOR_NOT_FOUND);
+    }
 
-    return this.updateVendorLogoImage;
+    try {
+      const response = await this.vendorRepository.update(
+        { id },
+        { isVerified: true },
+      );
+
+      return {
+        data: response,
+        message: SYS_MSG.VENDOR_ACTIVATED_SUCCESSFULLY,
+      };
+    } catch (err) {
+      throw new RequestTimeoutException(err, {
+        description: SYS_MSG.DB_CONNECTION_ERROR,
+      });
+    }
   }
 
-  async activateVendor() {}
+  async deactivateVendor(id: string) {
+    const vendorExist = await this.vendorExistProvider.checkVendorExistById(id);
 
-  async deactivateVendor() {}
+    if (vendorExist?.length == 0) {
+      throw new BadRequestException(SYS_MSG.VENDOR_NOT_FOUND);
+    }
 
-  async changeVendorBankAccount() {}
+    try {
+      const response = await this.vendorRepository.update(
+        { id },
+        { isVerified: false },
+      );
+
+      return {
+        data: response,
+        message: SYS_MSG.VENDOR_DEACTIVATED_SUCCESSFULLY,
+      };
+    } catch (err) {
+      throw new RequestTimeoutException(err, {
+        description: SYS_MSG.DB_CONNECTION_ERROR,
+      });
+    }
+  }
+
+  // async changeVendorBankAccount() {}
 }

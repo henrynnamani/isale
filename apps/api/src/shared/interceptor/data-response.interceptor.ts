@@ -1,4 +1,5 @@
 import { API_VERSION } from '@/constant';
+import { ResponseInterface } from '@/types';
 import {
   CallHandler,
   ExecutionContext,
@@ -6,7 +7,7 @@ import {
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
-import { catchError, map, Observable, throwError } from 'rxjs';
+import { catchError, map, Observable } from 'rxjs';
 
 @Injectable()
 export class DataResponseInterceptor implements NestInterceptor {
@@ -21,7 +22,7 @@ export class DataResponseInterceptor implements NestInterceptor {
           success: true,
           data: responseData,
           message,
-        };
+        } as ResponseInterface;
       }),
       catchError((err) => {
         const message = err?.message || 'Something went wrong';
@@ -33,7 +34,7 @@ export class DataResponseInterceptor implements NestInterceptor {
             success: false,
             data: null,
             message,
-          },
+          } as ResponseInterface,
           status,
         );
       }),

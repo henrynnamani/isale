@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
-import { CreateVendorDto } from '../dto/create-vendor.dto';
 import { PERCENTAGE_CHARGE } from '@/constant';
 import { VENDOR_SUBACCOUNT_PAYLOAD_DESCRIPTION } from '@/shared/system-message';
 import { CreateVendor } from '@/types';

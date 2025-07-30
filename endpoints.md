@@ -24,7 +24,7 @@ CHANGE PASSWORD -POST /change/password
 
 <USER>
 CREATE USER -POST /users ✅
-UPDATE USER ROLE -POST /users/:id - admin | vendor | user 
+<!-- UPDATE USER ROLE -POST /users/:id - admin | vendor | user  -->
 
 <ADMIN>
 VIEW ANALYTICS -GET /analytics
