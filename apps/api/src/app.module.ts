@@ -20,6 +20,7 @@ import { BrandModule } from './modules/brand/brand.module';
 import { RamModule } from './modules/ram/ram.module';
 import { RomModule } from './modules/rom/rom.module';
 import { ColorModule } from './modules/color/color.module';
+import { CategoryModule } from './modules/category/category.module';
 
 const ENV = process.env.NODE_ENV;
 
@@ -53,7 +54,8 @@ const ENV = process.env.NODE_ENV;
     BrandModule,
     RamModule,
     RomModule,
-    ColorModule
+    ColorModule,
+    CategoryModule
   ],
   controllers: [AppController],
   providers: [

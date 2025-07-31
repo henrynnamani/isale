@@ -29,3 +29,6 @@ export const COLOR_ALREADY_EXIST = (color: string) =>
   `Color(${color}) already exist`;
 export const COLOR_CREATED_SUCCESSFULLY = 'Color created successfully';
 export const COLOR_DELETED_SUCCESSFULLY = 'Color deleted successfully';
+
+export const CATEGORY_ALREADY_EXIST = 'Category already exists';
+export const CATEGORY_SUCCESSFULLY_CREATED = 'Category successfully created';
