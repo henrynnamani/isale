@@ -19,3 +19,13 @@ export const BRAND_DOES_NOT_EXIST = (brand: string) =>
   `Brand: ${brand} does not exist`;
 
 export const RAM_CREATED_SUCCESSFULLY = 'Ram successfully created';
+export const RAM_ALREADY_EXIST = 'Ram already eixst';
+
+export const ROM_CREATED_SUCCESSFULLY = 'Rom successfully created';
+export const ROM_ALREADY_EXIST = 'Rom already exist';
+
+export const COLOR_NOT_FOUND = (color: string) => `Color(${color}) not found`;
+export const COLOR_ALREADY_EXIST = (color: string) =>
+  `Color(${color}) already exist`;
+export const COLOR_CREATED_SUCCESSFULLY = 'Color created successfully';
+export const COLOR_DELETED_SUCCESSFULLY = 'Color deleted successfully';

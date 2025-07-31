@@ -18,6 +18,8 @@ import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
 import cloudinaryConfig from './config/cloudinary.config';
 import { BrandModule } from './modules/brand/brand.module';
 import { RamModule } from './modules/ram/ram.module';
+import { RomModule } from './modules/rom/rom.module';
+import { ColorModule } from './modules/color/color.module';
 
 const ENV = process.env.NODE_ENV;
 
@@ -49,7 +51,9 @@ const ENV = process.env.NODE_ENV;
     TelegramModule,
     CloudinaryModule,
     BrandModule,
-    RamModule
+    RamModule,
+    RomModule,
+    ColorModule
   ],
   controllers: [AppController],
   providers: [

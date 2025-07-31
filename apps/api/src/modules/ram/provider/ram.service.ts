@@ -1,4 +1,4 @@
-import { Injectable, RequestTimeoutException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, RequestTimeoutException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Ram } from '../model/ram.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -14,7 +14,11 @@ export class RamService {
   ) {}
 
   async addRam(size: number) {
-    await this.ramExist.checkRamAlreadyExist(size);
+    const ram = await this.ramExist.checkRamAlreadyExist(size);
+
+    if (ram) {
+      throw new BadRequestException(SYS_MSG.RAM_ALREADY_EXIST);
+    }
 
     try {
       const ram = this.ramRepository.create({ size: size });
