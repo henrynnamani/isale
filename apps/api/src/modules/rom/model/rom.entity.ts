@@ -1,8 +1,8 @@
 import { BaseModel } from '@/shared/base-entity';
 import { Column, Entity } from 'typeorm';
 
-@Entity('rams')
-export class Ram extends BaseModel {
+@Entity('rom')
+export class Rom extends BaseModel {
   @Column({
     type: 'integer',
     nullable: false,
