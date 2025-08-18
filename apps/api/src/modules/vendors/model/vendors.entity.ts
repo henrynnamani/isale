@@ -1,7 +1,8 @@
+import { Product } from '@/modules/product/model/product.entity';
 import { BaseModel } from '@/shared/base-entity';
 import { bankCodeEnum } from '@/shared/enum/bank-code.enum';
 import slugify from 'slugify';
-import { BeforeInsert, Column, Entity } from 'typeorm';
+import { BeforeInsert, Column, Entity, OneToMany } from 'typeorm';
 
 @Entity('vendors')
 export class Vendor extends BaseModel {
@@ -18,6 +19,9 @@ export class Vendor extends BaseModel {
     nullable: true,
   })
   slug: string;
+
+  @OneToMany(() => Product, (product) => product.vendor)
+  products: Product[];
 
   @Column({
     type: 'varchar',

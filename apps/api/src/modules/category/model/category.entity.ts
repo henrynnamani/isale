@@ -1,6 +1,7 @@
+import { Product } from '@/modules/product/model/product.entity';
 import { BaseModel } from '@/shared/base-entity';
 import slugify from 'slugify';
-import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
 
 @Entity('category')
 export class Category extends BaseModel {
@@ -22,6 +23,9 @@ export class Category extends BaseModel {
     nullable: false,
   })
   slug: string;
+
+  @OneToMany(() => Product, (product) => product.category)
+  products: Product[];
 
   @BeforeInsert()
   @BeforeUpdate()

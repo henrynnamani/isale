@@ -8,6 +8,8 @@ import { Brand } from '../model/brand.entity';
 import { Repository } from 'typeorm';
 import * as SYS_MSG from '@/shared/system-message';
 
+type optionalQuery = Partial<Pick<Brand, 'name' | 'id'>>;
+
 @Injectable()
 export class BrandExistProvider {
   constructor(
@@ -15,7 +17,7 @@ export class BrandExistProvider {
     private readonly brandRepository: Repository<Brand>,
   ) {}
 
-  async checkBrandExist(query: Partial<Brand>) {
+  async checkBrandExist(query: optionalQuery) {
     try {
       const brandExist = await this.brandRepository.findOne({
         where: {
@@ -35,7 +37,7 @@ export class BrandExistProvider {
     }
   }
 
-  async checkBrandNotExist(query: Partial<Brand>) {
+  async checkBrandNotExist(query: optionalQuery) {
     try {
       const brandExist = await this.brandRepository.findOne({
         where: {

@@ -1,5 +1,6 @@
+import { Product } from '@/modules/product/model/product.entity';
 import { BaseModel } from '@/shared/base-entity';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, ManyToMany } from 'typeorm';
 
 @Entity('rams')
 export class Ram extends BaseModel {
@@ -8,4 +9,7 @@ export class Ram extends BaseModel {
     nullable: false,
   })
   size: number;
+
+  @ManyToMany(() => Product, (product) => product.rams)
+  products: Product[]
 }

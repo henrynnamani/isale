@@ -4,9 +4,8 @@ import {
   RequestTimeoutException,
 } from '@nestjs/common';
 import { Rom } from '../model/rom.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Ram } from '@/modules/ram/model/ram.entity';
 import * as SYS_MSG from '@/shared/system-message';
 
 @Injectable()
@@ -25,6 +24,18 @@ export class RomExistProvider {
       });
 
       return rom;
+    } catch (err) {
+      throw new RequestTimeoutException(err, {
+        description: SYS_MSG.DB_CONNECTION_ERROR,
+      });
+    }
+  }
+
+  async getRomEntities(rams: string[]) {
+    try {
+      return await this.romRepository.findBy({
+        id: In(rams),
+      });
     } catch (err) {
       throw new RequestTimeoutException(err, {
         description: SYS_MSG.DB_CONNECTION_ERROR,

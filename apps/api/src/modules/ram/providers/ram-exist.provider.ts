@@ -1,7 +1,11 @@
-import { Injectable, NotFoundException, RequestTimeoutException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  RequestTimeoutException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Ram } from '../model/ram.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import * as SYS_MSG from '@/shared/system-message';
 
 @Injectable()
@@ -20,6 +24,18 @@ export class RamExistProvider {
       });
 
       return ram;
+    } catch (err) {
+      throw new RequestTimeoutException(err, {
+        description: SYS_MSG.DB_CONNECTION_ERROR,
+      });
+    }
+  }
+
+  async getRamEntities(rams: string[]) {
+    try {
+      return await this.ramRepository.findBy({
+        id: In(rams),
+      });
     } catch (err) {
       throw new RequestTimeoutException(err, {
         description: SYS_MSG.DB_CONNECTION_ERROR,

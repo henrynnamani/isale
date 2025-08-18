@@ -14,6 +14,4 @@ export class CategoryController {
   addCategory(@Body() addCategoryDto: AddCategoryDto) {
     return this.categoryService.addCategory(addCategoryDto);
   }
-
-  // updateCategory(@Body() updateCategoryDto: )
 }
