@@ -16,6 +16,12 @@ import paymentConfig from './config/payment.config';
 import { VendorsModule } from './modules/vendors/vendors.module';
 import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
 import cloudinaryConfig from './config/cloudinary.config';
+import { BrandModule } from './modules/brand/brand.module';
+import { RamModule } from './modules/ram/ram.module';
+import { RomModule } from './modules/rom/rom.module';
+import { ColorModule } from './modules/color/color.module';
+import { CategoryModule } from './modules/category/category.module';
+import { ProductModule } from './modules/product/product.module';
 
 const ENV = process.env.NODE_ENV;
 
@@ -46,6 +52,12 @@ const ENV = process.env.NODE_ENV;
     AuthModule,
     TelegramModule,
     CloudinaryModule,
+    BrandModule,
+    RamModule,
+    RomModule,
+    ColorModule,
+    CategoryModule,
+    ProductModule
   ],
   controllers: [AppController],
   providers: [

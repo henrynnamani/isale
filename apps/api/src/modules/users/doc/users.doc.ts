@@ -1,10 +1,5 @@
 import { applyDecorators } from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiBody,
-  ApiOperation,
-  ApiResponse,
-} from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateUserDto } from '../dto/create-user.dto';
 
 export const CreateUserDoc = () => {
@@ -12,7 +7,6 @@ export const CreateUserDoc = () => {
     ApiOperation({
       summary: 'Create user',
     }),
-    // ApiBearerAuth(),
     ApiBody({
       required: true,
       type: CreateUserDto,

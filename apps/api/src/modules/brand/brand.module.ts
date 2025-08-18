@@ -1,0 +1,13 @@
+import { Module } from '@nestjs/common';
+import { BrandController } from './brand.controller';
+import { BrandService } from './provider/brand.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Brand } from './model/brand.entity';
+import { BrandExistProvider } from './providers/brand-exist.provider';
+
+@Module({
+  imports: [TypeOrmModule.forFeature([Brand])],
+  controllers: [BrandController],
+  providers: [BrandService, BrandExistProvider],
+})
+export class BrandModule {}

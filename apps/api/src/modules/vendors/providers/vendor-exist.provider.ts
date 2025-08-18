@@ -10,10 +10,23 @@ export class VendorExistProvider {
     @InjectRepository(Vendor)
     private readonly vendorRepository: Repository<Vendor>,
   ) {}
-  async checkVendorExist(chatId: number) {
+  async checkVendorExistByChatId(chatId: number) {
     try {
       const vendor = await this.vendorRepository.findBy({
         telegramChatId: chatId,
+      });
+      return vendor;
+    } catch (err) {
+      throw new RequestTimeoutException(err, {
+        description: SYS_MSG.DB_CONNECTION_ERROR,
+      });
+    }
+  }
+
+  async checkVendorExistById(id: string) {
+    try {
+      const vendor = await this.vendorRepository.findBy({
+        id,
       });
       return vendor;
     } catch (err) {
