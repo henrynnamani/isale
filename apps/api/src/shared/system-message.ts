@@ -32,3 +32,9 @@ export const COLOR_DELETED_SUCCESSFULLY = 'Color deleted successfully';
 
 export const CATEGORY_ALREADY_EXIST = 'Category already exists';
 export const CATEGORY_SUCCESSFULLY_CREATED = 'Category successfully created';
+export const CATEGORY_NOT_FOUND = (category: string) =>
+  `Category(${category}}) not found`;
+
+export const PRODUCT_CREATED_SUCCESSFULLY = 'Product successfully created';
+export const PRODUCT_NOT_FOUND = '';
+export const PRODUCT_LIST = 'Successfully fetched product list';

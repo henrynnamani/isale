@@ -53,7 +53,7 @@ export class VendorsService {
   async activateVendor(id: string) {
     const vendorExist = await this.vendorExistProvider.checkVendorExistById(id);
 
-    if (vendorExist?.length == 0) {
+    if (!vendorExist) {
       throw new BadRequestException(SYS_MSG.VENDOR_NOT_FOUND);
     }
 
@@ -77,7 +77,7 @@ export class VendorsService {
   async deactivateVendor(id: string) {
     const vendorExist = await this.vendorExistProvider.checkVendorExistById(id);
 
-    if (vendorExist?.length == 0) {
+    if (!vendorExist) {
       throw new BadRequestException(SYS_MSG.VENDOR_NOT_FOUND);
     }
 

@@ -20,7 +20,7 @@ export class Vendor extends BaseModel {
   })
   slug: string;
 
-  @OneToMany(() => Product, (product) => product.vendor)
+  @OneToMany(() => Product, (product) => product.id)
   products: Product[];
 
   @Column({

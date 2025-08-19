@@ -4,12 +4,15 @@ import { Type } from 'class-transformer';
 import {
   IsArray,
   IsEnum,
+  IsInt,
   IsJSON,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
   IsUUID,
+  Max,
+  Min,
 } from 'class-validator';
 
 export class CreateProductDto {
@@ -120,6 +123,16 @@ export class CreateProductDto {
   @IsUUID()
   @IsNotEmpty()
   vendorId: string;
+
+  @ApiProperty({
+    example: 57,
+    description: 'Gadget battery health',
+  })
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  @Max(100)
+  batteryHealth?: number;
 
   @ApiProperty({
     example: '17000000',

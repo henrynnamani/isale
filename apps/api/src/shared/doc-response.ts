@@ -56,3 +56,36 @@ export const CreateDoc = (
       },
     }),
   );
+
+export const CreateGetDoc = (
+  summary: string,
+  dto: Type<any>, // dynamically accept DTO
+) =>
+  applyDecorators(
+    ApiOperation({ summary }),
+    ApiExtraModels(DocResponse, dto),
+    ApiResponse({
+      status: 201,
+      description: `${summary} success response`,
+      schema: {
+        allOf: [
+          { $ref: getSchemaPath(DocResponse) },
+          {
+            properties: {
+              data: { $ref: getSchemaPath(dto) },
+            },
+          },
+        ],
+      },
+    }),
+    ApiBadRequestResponse({
+      description: 'Invalid input or bad request',
+      schema: {
+        example: {
+          data: null,
+          message: 'Bad request',
+          success: false,
+        },
+      },
+    }),
+  );

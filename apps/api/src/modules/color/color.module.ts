@@ -9,5 +9,6 @@ import { ColorExistProvider } from './providers/color-exist.provider';
   imports: [TypeOrmModule.forFeature([Color])],
   controllers: [ColorController],
   providers: [ColorService, ColorExistProvider],
+  exports: [ColorExistProvider],
 })
 export class ColorModule {}

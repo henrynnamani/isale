@@ -20,13 +20,11 @@ export class BrandExistProvider {
   async checkBrandExist(query: optionalQuery) {
     try {
       const brandExist = await this.brandRepository.findOne({
-        where: {
-          ...query,
-        },
+        where: query,
       });
 
-      if (brandExist) {
-        throw new BadRequestException(SYS_MSG.BRAND_EXISTS(brandExist.name));
+      if (!brandExist) {
+        throw new BadRequestException(SYS_MSG.BRAND_DOES_NOT_EXIST(query.name));
       }
 
       return brandExist;
@@ -43,15 +41,11 @@ export class BrandExistProvider {
         where: {
           ...query,
         },
-      });
+      })[0];
 
-      if (!brandExist) {
-        throw new BadRequestException(
-          SYS_MSG.BRAND_DOES_NOT_EXIST(brandExist.name),
-        );
+      if (brandExist) {
+        throw new BadRequestException(SYS_MSG.BRAND_EXISTS(brandExist.name));
       }
-
-      return brandExist;
     } catch (err) {
       throw new RequestTimeoutException(err, {
         description: SYS_MSG.DB_CONNECTION_ERROR,
