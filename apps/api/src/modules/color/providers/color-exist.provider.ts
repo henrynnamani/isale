@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Color } from '../model/color.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import * as SYS_MSG from '@/shared/system-message';
 
 @Injectable()
@@ -38,6 +38,18 @@ export class ColorExistProvider {
       });
 
       return exist;
+    } catch (err) {
+      throw new RequestTimeoutException(err, {
+        description: SYS_MSG.DB_CONNECTION_ERROR,
+      });
+    }
+  }
+
+  async getColorEntities(colors: string[]) {
+    try {
+      return await this.colorRepository.findBy({
+        id: In(colors),
+      });
     } catch (err) {
       throw new RequestTimeoutException(err, {
         description: SYS_MSG.DB_CONNECTION_ERROR,

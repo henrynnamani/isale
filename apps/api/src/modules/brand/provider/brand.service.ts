@@ -8,7 +8,6 @@ import { Repository } from 'typeorm';
 import { Brand } from '../model/brand.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as SYS_MSG from '@/shared/system-message';
-import { create } from 'domain';
 import { BrandExistProvider } from '../providers/brand-exist.provider';
 
 @Injectable()
@@ -19,7 +18,7 @@ export class BrandService {
     private readonly brandExistProvider: BrandExistProvider,
   ) {}
   async createBrand(createBrandDto: CreateBrandDto) {
-    await this.brandExistProvider.checkBrandExist({
+    await this.brandExistProvider.checkBrandNotExist({
       name: createBrandDto.name,
     });
 

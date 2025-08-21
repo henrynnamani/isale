@@ -48,10 +48,18 @@ export class Product extends BaseModel {
   brand: Brand;
 
   @ManyToMany(() => Ram, (ram) => ram.products)
+  @JoinTable()
   rams: Ram[];
 
   @ManyToMany(() => Rom, (rom) => rom.products)
+  @JoinTable()
   roms: Rom[];
+
+  @Column({
+    type: 'int',
+    nullable: true,
+  })
+  battery: number;
 
   @Column({
     type: 'enum',
@@ -67,6 +75,6 @@ export class Product extends BaseModel {
   })
   price: number;
 
-  @OneToOne(() => Vendor, (vendor) => vendor.products)
+  @OneToOne(() => Vendor, (vendor) => vendor.id)
   vendor: Vendor;
 }

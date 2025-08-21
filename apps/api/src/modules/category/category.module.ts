@@ -8,6 +8,7 @@ import { CategoryExistProvider } from './providers/category-exist.provider';
 @Module({
   imports: [TypeOrmModule.forFeature([Category])],
   controllers: [CategoryController],
-  providers: [CategoryService, CategoryExistProvider]
+  providers: [CategoryService, CategoryExistProvider],
+  exports: [CategoryExistProvider],
 })
 export class CategoryModule {}

@@ -9,5 +9,6 @@ import { RomExistProvider } from './providers/rom-exist.provider';
   imports: [TypeOrmModule.forFeature([Rom])],
   controllers: [RomController],
   providers: [RomService, RomExistProvider],
+  exports: [RomExistProvider],
 })
 export class RomModule {}

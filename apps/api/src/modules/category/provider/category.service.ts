@@ -19,9 +19,9 @@ export class CategoryService {
   ) {}
 
   async addCategory(addCategoryDto: AddCategoryDto) {
-    const category = await this.categoryExistProvider.checkCategoryExist(
-      addCategoryDto.name,
-    );
+    const category = await this.categoryExistProvider.checkCategoryExist({
+      name: addCategoryDto.name,
+    });
 
     if (category) {
       throw new BadRequestException(SYS_MSG.CATEGORY_ALREADY_EXIST);

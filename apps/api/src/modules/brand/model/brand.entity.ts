@@ -15,5 +15,5 @@ export class Brand extends BaseModel {
   deletedAt: Date;
 
   @OneToMany(() => Product, (product) => product.brand)
-  products: Product[]
+  products: Product[];
 }

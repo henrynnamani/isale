@@ -10,6 +10,6 @@ import { CreateSubaccountProvider } from './providers/create-subaccount.provider
   imports: [TypeOrmModule.forFeature([Vendor])],
   providers: [VendorsService, VendorExistProvider, CreateSubaccountProvider],
   controllers: [VendorsController],
-  exports: [VendorsService],
+  exports: [VendorsService, VendorExistProvider],
 })
 export class VendorsModule {}

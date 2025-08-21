@@ -1,4 +1,5 @@
 import { Product } from '@/modules/product/model/product.entity';
+import { Review } from '@/modules/review/model/review.entity';
 import { BaseModel } from '@/shared/base-entity';
 import { bankCodeEnum } from '@/shared/enum/bank-code.enum';
 import slugify from 'slugify';
@@ -20,7 +21,7 @@ export class Vendor extends BaseModel {
   })
   slug: string;
 
-  @OneToMany(() => Product, (product) => product.vendor)
+  @OneToMany(() => Product, (product) => product.id)
   products: Product[];
 
   @Column({
@@ -60,12 +61,8 @@ export class Vendor extends BaseModel {
   })
   bankCode: string;
 
-  @Column({
-    type: 'integer',
-    nullable: true,
-    default: 0,
-  })
-  rating: number;
+  @OneToMany(() => Review, (review) => review.vendor)
+  reviews: Review[];
 
   @Column({
     type: 'boolean',
