@@ -38,3 +38,5 @@ export const CATEGORY_NOT_FOUND = (category: string) =>
 export const PRODUCT_CREATED_SUCCESSFULLY = 'Product successfully created';
 export const PRODUCT_NOT_FOUND = '';
 export const PRODUCT_LIST = 'Successfully fetched product list';
+
+export const REVIEW_CREATED_SUCCESSFULLY = 'Review created successfully';

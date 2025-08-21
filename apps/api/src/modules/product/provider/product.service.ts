@@ -114,10 +114,7 @@ export class ProductService {
       query.andWhere('product.price >= :maxPrice', { maxPrice });
     }
 
-    const result = await this.paginationService.cursorPaginateQuery(
-      query,
-      paginationDto,
-    );
+    const result = this.paginationService.cursorPaginate(query, paginationDto);
 
     return {
       data: result,

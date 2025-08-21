@@ -1,7 +1,7 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Review } from '@/modules/review/model/review.entity';
 import { BaseModel } from 'src/shared/base-entity';
 import { UserRoleEnum } from 'src/shared/enum/user-role.enum';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 
 @Entity('users')
 export class User extends BaseModel {
@@ -35,10 +35,13 @@ export class User extends BaseModel {
   })
   googleId: string;
 
+  @OneToMany(() => Review, (review) => review.user)
+  reviews: Review[];
+
   @Column({
     type: 'enum',
     enum: UserRoleEnum,
-    default: UserRoleEnum.USER
+    default: UserRoleEnum.USER,
   })
   role: UserRoleEnum;
 }

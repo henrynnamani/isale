@@ -59,10 +59,6 @@ PATCH BRAND -PATCH /brand/:id
 ADD REVIEW -POST /product/review
 DELETE REVIEW - DELETE /product/review/:id
 
-<!-- <BANK>
-ADD BANK -POST /bank
-DELETE BANK -DELETE /bank/:id -->
-
 <PAYMENT_METHOD>
 ADD PAYMENT METHOD -POST /payment/method
 REMOVE PAYMENT METHOD -DELETE /payment/method/:id
