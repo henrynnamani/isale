@@ -8,6 +8,7 @@ export const VENDOR_EXISTS = 'Vendor already Exist';
 export const VENDOR_ACTIVATED_SUCCESSFULLY = 'Vendor activated';
 export const VENDOR_DEACTIVATED_SUCCESSFULLY = 'Vendor deactivated';
 export const VENDOR_NOT_FOUND = 'Vendor Not Found';
+export const VENDOR_PRODUCT_LIST = 'Vendor product list';
 
 export const ERROR_UPLOADING_TO_CLOUDINARY =
   'Error encountered uploading to Cloudinary';
@@ -36,7 +37,16 @@ export const CATEGORY_NOT_FOUND = (category: string) =>
   `Category(${category}}) not found`;
 
 export const PRODUCT_CREATED_SUCCESSFULLY = 'Product successfully created';
-export const PRODUCT_NOT_FOUND = '';
+export const PRODUCT_DOES_NOT_EXIST = 'Product does not exist';
 export const PRODUCT_LIST = 'Successfully fetched product list';
+export const PRODUCT_DETAIL_FETCHED_SUCCESSFULLY =
+  'Product detail successfully fetched';
+export const PRODUCT_DELETED_SUCCESSFULLY = 'Product successfully deleted';
+export const PRODUCT_UPDATED_SUCCESSFULLY = 'Product updated successfully';
 
 export const REVIEW_CREATED_SUCCESSFULLY = 'Review created successfully';
+
+export const CART_DOES_NOT_EXIST = 'Cart does not exist';
+export const CART_UPDATED_SUCCESSFULLY = 'Cart updated';
+export const CART_EMPTY = 'Cart is empty';
+export const CART_CLEARED_SUCCESSFULLY = 'Cart cleared successfully';

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, RequestTimeoutException } from '@nestjs/common';
 import { CreateProductDto } from '../dto/create-product.dto';
 import { MoreThan, Repository } from 'typeorm';
 import { Product } from '../model/product.entity';
@@ -8,6 +8,13 @@ import * as SYS_MSG from '@/shared/system-message';
 import { CursorPaginationDto } from '@/shared/pagination/pagination.dto';
 import { PaginationService } from '@/shared/pagination/pagination.service';
 import { FilterProductDto } from '../dto/filter-product.dto';
+import { ProductDetailDto } from '../dto/product-detail.dto';
+import { DeleteProductParamDto } from '../dto/delete-param.dto';
+import { ProductExistProvider } from '../providers/product-exist.provider';
+import { UpdateProductDto } from '../dto/update-product.dto';
+import { Color } from '@/modules/color/model/color.entity';
+import { Ram } from '@/modules/ram/model/ram.entity';
+import { Rom } from '@/modules/rom/model/rom.entity';
 @Injectable()
 export class ProductService {
   constructor(
@@ -15,9 +22,9 @@ export class ProductService {
     private readonly productRepository: Repository<Product>,
     private readonly saveProductProvider: SaveProductProvider,
     private readonly paginationService: PaginationService,
+    private readonly productExistProvider: ProductExistProvider,
   ) {}
 
-  // TODO: Add a image creation functionality on the fly
   async createProduct(createProductDto: CreateProductDto) {
     // upload image
     const product =
@@ -114,11 +121,108 @@ export class ProductService {
       query.andWhere('product.price >= :maxPrice', { maxPrice });
     }
 
-    const result = this.paginationService.cursorPaginate(query, paginationDto);
+    const result = await this.paginationService.cursorPaginate(
+      query,
+      paginationDto,
+    );
 
     return {
       data: result,
       message: SYS_MSG.PRODUCT_LIST,
     };
+  }
+
+  async productDetail(productDetailDto: ProductDetailDto) {
+    const { id } = productDetailDto;
+    try {
+      const product = await this.productRepository.findOneOrFail({
+        where: { id },
+      });
+
+      return {
+        data: product,
+        message: SYS_MSG.PRODUCT_DETAIL_FETCHED_SUCCESSFULLY,
+      };
+    } catch (err) {
+      throw new RequestTimeoutException(err, {
+        description: SYS_MSG.DB_CONNECTION_ERROR,
+      });
+    }
+  }
+
+  async deleteProduct(deleteProductDto: DeleteProductParamDto) {
+    const { id } = deleteProductDto;
+
+    try {
+      const product = await this.productExistProvider.checkProductExist(id);
+
+      await this.productRepository.delete({
+        id: product.id,
+      });
+
+      return {
+        data: product,
+        message: SYS_MSG.PRODUCT_DELETED_SUCCESSFULLY,
+      };
+    } catch (err) {
+      throw new RequestTimeoutException(err, {
+        description: SYS_MSG.DB_CONNECTION_ERROR,
+      });
+    }
+  }
+
+  async updateProduct(id: string, updateProductDto: Partial<UpdateProductDto>) {
+    try {
+      const product = await this.productExistProvider.checkProductExist(id);
+
+      product.battery = updateProductDto.batteryHealth;
+      product.condition = updateProductDto.condition;
+      product.specification = JSON.parse(updateProductDto.specification);
+      product.images = updateProductDto.images;
+      product.price = updateProductDto.price;
+      product.name = updateProductDto.name;
+      product.colors = updateProductDto.colors as unknown as Color[];
+      product.rams = updateProductDto.rams as unknown as Ram[];
+      product.roms = updateProductDto.roms as unknown as Rom[];
+
+      await this.productRepository.update({ id }, product);
+
+      return {
+        data: product,
+        message: SYS_MSG.PRODUCT_UPDATED_SUCCESSFULLY,
+      };
+    } catch (err) {
+      throw new RequestTimeoutException(err, {
+        description: SYS_MSG.DB_CONNECTION_ERROR,
+      });
+    }
+  }
+
+  async fetchVendorProduct(
+    vendorId: string,
+    paginationDto: CursorPaginationDto,
+  ) {
+    try {
+      const query = this.productRepository
+        .createQueryBuilder('product')
+        .leftJoinAndSelect('product.vendor', 'vendor');
+
+      query.andWhere('vendor.id = :vendorId', { vendorId });
+
+      //TODO: convert to offset pagination
+      const result = await this.paginationService.cursorPaginate(
+        query,
+        paginationDto,
+      );
+
+      return {
+        data: result,
+        message: SYS_MSG.VENDOR_PRODUCT_LIST,
+      };
+    } catch (err) {
+      throw new RequestTimeoutException(err, {
+        description: SYS_MSG.DB_CONNECTION_ERROR,
+      });
+    }
   }
 }
