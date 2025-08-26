@@ -1,7 +1,9 @@
+import { Cart } from '@/modules/cart/model/cart.entity';
+import { Order } from '@/modules/order/model/order.entity';
 import { Review } from '@/modules/review/model/review.entity';
 import { BaseModel } from 'src/shared/base-entity';
 import { UserRoleEnum } from 'src/shared/enum/user-role.enum';
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity, OneToMany, OneToOne } from 'typeorm';
 
 @Entity('users')
 export class User extends BaseModel {
@@ -35,8 +37,14 @@ export class User extends BaseModel {
   })
   googleId: string;
 
+  @OneToOne(() => Cart, (cart) => cart.user)
+  cart: Cart;
+
   @OneToMany(() => Review, (review) => review.user)
   reviews: Review[];
+
+  @OneToMany(() => Order, (order) => order.user)
+  orders: Order[];
 
   @Column({
     type: 'enum',

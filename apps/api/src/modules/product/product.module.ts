@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { ProductController } from './product.controller';
 import { ProductService } from './provider/product.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -17,6 +17,7 @@ import { RomModule } from '../rom/rom.module';
 import { VendorsModule } from '../vendors/vendors.module';
 import { ColorModule } from '../color/color.module';
 import { PaginationService } from '@/shared/pagination/pagination.service';
+import { ProductExistProvider } from './providers/product-exist.provider';
 
 @Module({
   imports: [
@@ -25,10 +26,16 @@ import { PaginationService } from '@/shared/pagination/pagination.service';
     CategoryModule,
     RamModule,
     RomModule,
-    VendorsModule,
+    forwardRef(() => VendorsModule),
     ColorModule,
   ],
   controllers: [ProductController],
-  providers: [ProductService, SaveProductProvider, PaginationService],
+  providers: [
+    ProductService,
+    SaveProductProvider,
+    PaginationService,
+    ProductExistProvider,
+  ],
+  exports: [ProductService],
 })
 export class ProductModule {}

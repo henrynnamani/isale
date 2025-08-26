@@ -1,3 +1,4 @@
+import { Order } from '@/modules/order/model/order.entity';
 import { Product } from '@/modules/product/model/product.entity';
 import { Review } from '@/modules/review/model/review.entity';
 import { BaseModel } from '@/shared/base-entity';
@@ -21,7 +22,7 @@ export class Vendor extends BaseModel {
   })
   slug: string;
 
-  @OneToMany(() => Product, (product) => product.id)
+  @OneToMany(() => Product, (product) => product.vendor)
   products: Product[];
 
   @Column({
@@ -70,6 +71,9 @@ export class Vendor extends BaseModel {
     nullable: false,
   })
   isVerified: boolean;
+
+  @OneToMany(() => Order, (order) => order.vendor)
+  orders: Order[];
 
   @BeforeInsert()
   generateSlug() {

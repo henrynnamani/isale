@@ -59,7 +59,7 @@ export const CreateDoc = (
 
 export const CreateGetDoc = (
   summary: string,
-  dto: Type<any>, // dynamically accept DTO
+  dto?: Type<any>, // dynamically accept DTO
 ) =>
   applyDecorators(
     ApiOperation({ summary }),

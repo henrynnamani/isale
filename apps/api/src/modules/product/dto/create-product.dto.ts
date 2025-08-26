@@ -80,6 +80,14 @@ export class CreateProductDto {
   brandId: string;
 
   @ApiProperty({
+    example: 2,
+    description: 'In stock',
+  })
+  @IsInt()
+  @IsNotEmpty()
+  stock: number;
+
+  @ApiProperty({
     example: [
       'AAS27rU3SXeAfo8lOonM0g==',
       'n6nERGU5QbSiFF8nKo8FjA==',

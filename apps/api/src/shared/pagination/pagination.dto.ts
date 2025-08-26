@@ -6,7 +6,7 @@ import { IsInt, IsOptional, IsString, Min } from 'class-validator';
 export class CursorPaginationDto {
   @ApiPropertyOptional({
     example: '48sdhs9-2hdf-sdhse',
-    description: 'Product ID',
+    description: 'Entity ID',
   })
   @IsOptional()
   @IsString()

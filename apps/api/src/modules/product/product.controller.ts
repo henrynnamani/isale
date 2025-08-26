@@ -1,14 +1,23 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { ProductService } from './provider/product.service';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiParam, ApiTags } from '@nestjs/swagger';
 import { CreateDoc, CreateGetDoc } from '@/shared/doc-response';
 import { CreateProductDto } from './dto/create-product.dto';
 import { CursorPaginationDto } from '@/shared/pagination/pagination.dto';
-import {
-  FilterProductDto,
-  FilterProductWithPaginationDto,
-} from './dto/filter-product.dto';
+import { FilterProductWithPaginationDto } from './dto/filter-product.dto';
 import { FilterProductDoc } from './doc/filter-product.doc';
+import { ProductDetailDto } from './dto/product-detail.dto';
+import { DeleteProductParamDto } from './dto/delete-param.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 
 @ApiTags('product')
 @Controller('product')
@@ -21,23 +30,18 @@ export class ProductController {
     return this.productService.createProduct(createProductDto);
   }
 
-  @CreateGetDoc('Get Products', CursorPaginationDto)
+  @CreateGetDoc('Fetch all product', CursorPaginationDto)
   @Get('cursor')
   allProducts(@Query() paginationDto: CursorPaginationDto) {
     return this.productService.getProducts(paginationDto);
   }
 
-  /**
-   * Filter by
-   * - Ram x
-   * - name x
-   * - Rom x
-   * - Price
-   * - colors x
-   * - brand x
-   * - category x
-   * - condition x
-   */
+  @Get(':id')
+  @CreateGetDoc('Fetch product detail', ProductDetailDto)
+  @ApiParam({ name: 'id', type: String, description: 'Product ID' })
+  productDetail(@Param() productQueryDto: ProductDetailDto) {
+    return this.productService.productDetail(productQueryDto);
+  }
 
   @FilterProductDoc()
   @Get('filter')
@@ -46,5 +50,22 @@ export class ProductController {
       cursor: filterProductDto.cursor,
       limit: filterProductDto.limit,
     });
+  }
+
+  @Delete(':id')
+  @ApiParam({ name: 'id', type: String, description: 'Product ID ' })
+  @CreateGetDoc('Delete product', DeleteProductParamDto)
+  deleteProduct(@Param() deleteProductParamDto: DeleteProductParamDto) {
+    return this.productService.deleteProduct(deleteProductParamDto);
+  }
+
+  @Patch(':id')
+  @ApiParam({ name: 'id', type: String, description: 'Product ID ' })
+  @CreateDoc('Update product', UpdateProductDto)
+  updateProduct(
+    @Param('id') id: string,
+    @Body() updateProductDto: Partial<UpdateProductDto>,
+  ) {
+    return this.productService.updateProduct(id, updateProductDto);
   }
 }

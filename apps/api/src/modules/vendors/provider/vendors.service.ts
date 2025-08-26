@@ -10,6 +10,8 @@ import { VendorExistProvider } from '../providers/vendor-exist.provider';
 import { CreateSubaccountProvider } from '../providers/create-subaccount.provider';
 import * as SYS_MSG from '@/shared/system-message';
 import { CreateVendor } from '@/types';
+import { ProductService } from '@/modules/product/provider/product.service';
+import { CursorPaginationDto } from '@/shared/pagination/pagination.dto';
 
 @Injectable()
 export class VendorsService {
@@ -18,6 +20,7 @@ export class VendorsService {
     private readonly vendorRepository: Repository<Vendor>,
     private readonly vendorExistProvider: VendorExistProvider,
     private readonly createSubaccountProvider: CreateSubaccountProvider,
+    private readonly productService: ProductService,
   ) {}
 
   async createVendor(createVendorDto: CreateVendor) {
@@ -96,6 +99,10 @@ export class VendorsService {
         description: SYS_MSG.DB_CONNECTION_ERROR,
       });
     }
+  }
+
+  async vendorProducts(id: string, paginationDto: CursorPaginationDto) {
+    return this.productService.fetchVendorProduct(id, paginationDto);
   }
 
   // async changeVendorBankAccount() {}
