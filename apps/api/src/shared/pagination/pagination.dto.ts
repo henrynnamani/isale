@@ -1,7 +1,7 @@
 import { PAGINATION_LIMIT } from '@/constant';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsInt, IsOptional, IsString, Min } from 'class-validator';
+import { IsInt, IsNumber, IsOptional, IsString, Min } from 'class-validator';
 
 export class CursorPaginationDto {
   @ApiPropertyOptional({
@@ -21,4 +21,24 @@ export class CursorPaginationDto {
   @IsInt()
   @Min(1)
   limit: number = PAGINATION_LIMIT;
+}
+
+export class PaginationDto {
+  @ApiProperty({
+    example: 10,
+    description: 'Limit of order list',
+  })
+  @IsNumber()
+  @Type(() => Number)
+  @IsOptional()
+  limit: number;
+
+  @ApiProperty({
+    example: 1,
+    description: 'current page of order list',
+  })
+  @IsNumber()
+  @Type(() => Number)
+  @IsOptional()
+  page: number = 1;
 }

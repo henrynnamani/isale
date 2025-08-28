@@ -6,7 +6,7 @@ import { deleteBrandDoc } from './doc/delete-brand.doc';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('brand')
-@Controller('brand')
+@Controller('brands')
 export class BrandController {
   constructor(private readonly brandService: BrandService) {}
 

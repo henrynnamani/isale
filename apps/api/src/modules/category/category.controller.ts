@@ -5,7 +5,7 @@ import { addCategoryDoc } from './doc/add-category.doc';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('category')
-@Controller('category')
+@Controller('categories')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 

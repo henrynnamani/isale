@@ -19,8 +19,8 @@ import { ProductDetailDto } from './dto/product-detail.dto';
 import { DeleteProductParamDto } from './dto/delete-param.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 
-@ApiTags('product')
-@Controller('product')
+@ApiTags('products')
+@Controller('products')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
@@ -31,7 +31,7 @@ export class ProductController {
   }
 
   @CreateGetDoc('Fetch all product', CursorPaginationDto)
-  @Get('cursor')
+  @Get('')
   allProducts(@Query() paginationDto: CursorPaginationDto) {
     return this.productService.getProducts(paginationDto);
   }

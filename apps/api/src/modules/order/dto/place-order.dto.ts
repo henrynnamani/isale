@@ -1,12 +1,14 @@
-import { Column } from 'typeorm';
-import { OrderItem } from '../model/order-item.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import { string } from 'joi';
 import { IsArray, IsInt, IsNotEmpty, IsString } from 'class-validator';
+
+interface OrderItemI {
+  productId: string;
+  quantity: number;
+}
 
 export class PlaceOrderDto {
   @ApiProperty({
-    example: 'dfhdf-3823fdf-32hdfk',
+    example: '97b2ede1-2a53-439f-8933-035cc5274e1e',
     description: 'User ID',
   })
   @IsString()
@@ -14,7 +16,7 @@ export class PlaceOrderDto {
   userId: string;
 
   @ApiProperty({
-    example: 'dfhdf-3823fdf-32hdfk',
+    example: '0de9ab4b-1d67-4264-bf3b-29f488a4fd8b',
     description: 'vendor ID',
   })
   @IsString()
@@ -22,17 +24,19 @@ export class PlaceOrderDto {
   vendorId: string;
 
   @ApiProperty({
-    example: 5600,
-    description: 'Total amount',
-  })
-  @IsInt()
-  @IsNotEmpty()
-  total_amount: number;
-
-  @ApiProperty({
-    example: ['dfhdf-3823fdf-32hdfk', 'sdfks-83sdjsa-dfjsd88'],
+    example: [
+      {
+        productId: '71a5496b-4610-4b1f-b8a3-701007db3cdd',
+        quantity: 1,
+      },
+      {
+        productId: 'bbf7001e-62f6-4ae6-aa15-d4e01aa97236',
+        quantity: 1,
+      },
+    ],
     description: 'User ID',
   })
   @IsArray()
-  items: OrderItem[];
+  @IsNotEmpty()
+  items: OrderItemI[];
 }

@@ -3,7 +3,7 @@ import { Vendor } from '@/modules/vendors/model/vendors.entity';
 import { BaseModel } from '@/shared/base-entity';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { OrderItem } from './order-item.entity';
-import { DeliveryStatus, PaymentStatus } from '@/shared/enum/order.enum';
+import { DeliveryStatus } from '@/shared/enum/order.enum';
 import { Payment } from '@/modules/payment/model/payment.entity';
 
 @Entity('order')
@@ -21,13 +21,6 @@ export class Order extends BaseModel {
   total_amount: number;
 
   @Column({
-    enum: PaymentStatus,
-    default: PaymentStatus.PENDING,
-    nullable: false,
-  })
-  payment_status: PaymentStatus;
-
-  @Column({
     enum: DeliveryStatus,
     default: DeliveryStatus.PENDING,
   })
@@ -36,6 +29,6 @@ export class Order extends BaseModel {
   @OneToMany(() => Payment, (payment) => payment.order)
   payments: Payment[];
 
-  @OneToMany(() => OrderItem, (item) => item.order)
+  @OneToMany(() => OrderItem, (item) => item.order, { eager: true })
   items: OrderItem[];
 }

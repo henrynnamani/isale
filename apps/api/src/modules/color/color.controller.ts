@@ -6,7 +6,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { deleteColorDoc } from './doc/delete-color.doc';
 
 @ApiTags('color')
-@Controller('color')
+@Controller('colors')
 export class ColorController {
   constructor(private readonly colorService: ColorService) {}
 

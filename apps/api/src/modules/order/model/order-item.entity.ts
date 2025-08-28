@@ -8,7 +8,7 @@ export class OrderItem extends BaseModel {
   @ManyToOne(() => Order, (order) => order.items)
   order: Order;
 
-  @ManyToOne(() => Product, (product) => product.id)
+  @ManyToOne(() => Product, (product) => product.id, { eager: true })
   product: Product;
 
   @Column({

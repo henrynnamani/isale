@@ -5,7 +5,7 @@ import { createRamDoc } from './doc/create-ram.doc';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('ram')
-@Controller('ram')
+@Controller('rams')
 export class RamController {
   constructor(private readonly ramService: RamService) {}
 

@@ -25,6 +25,7 @@ import { ProductModule } from './modules/product/product.module';
 import { ReviewModule } from './modules/review/review.module';
 import { CartModule } from './modules/cart/cart.module';
 import { OrderModule } from './modules/order/order.module';
+import { PaymentModule } from './modules/payment/payment.module';
 
 const ENV = process.env.NODE_ENV;
 
@@ -64,6 +65,7 @@ const ENV = process.env.NODE_ENV;
     ReviewModule,
     CartModule,
     OrderModule,
+    PaymentModule,
   ],
   controllers: [AppController],
   providers: [
