@@ -1,3 +1,4 @@
+import { UserRoleEnum } from '@/shared/enum/user-role.enum';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsEmail,
@@ -8,9 +9,8 @@ import {
   IsStrongPassword,
   Matches,
 } from 'class-validator';
-import { UserRoleEnum } from 'src/shared/enum/user-role.enum';
 
-export class CreateUserDto {
+export class RegisterDto {
   @ApiProperty({
     example: 'Joy akpan',
     description: 'User name',

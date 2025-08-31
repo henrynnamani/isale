@@ -3,6 +3,7 @@ export const USER_CREATED_SUCCESSFULLY = 'User Created Successfully';
 export const USER_DOES_NOT_EXIST = 'User does not exist';
 
 export const DB_CONNECTION_ERROR = 'Error connecting to Database';
+export const USER_WITH_EMAIL_EXIST = 'User with email already exist';
 
 export const VENDOR_SUBACCOUNT_PAYLOAD_DESCRIPTION = 'Vendor payout subaccount';
 export const VENDOR_EXISTS = 'Vendor already Exist';
@@ -66,5 +67,15 @@ export const CRYPTO_PAYMENT_INITIALIZATION_FAILED =
   'Crypto payment initialization failed';
 export const NOWPAYMENT_API_UNAVAILABLE =
   'NowPayments service is currently unavailable.';
-export const NOWPAYMENT_MINIMUM_AMOUNT = (estimated_amount, min_amount) =>
+export const NOWPAYMENT_MINIMUM_AMOUNT = (
+  estimated_amount: number,
+  min_amount: number,
+) =>
   `Estimated amount ${estimated_amount} is less than the minimum allowed ${min_amount}.`;
+
+export const EXPIRED_OTP = 'Otp has expired';
+
+export const INVALID_CREDENTIAL = 'Invalid credential';
+export const SIGN_IN = 'Sign in successfully';
+export const USER_EMAIL_UNVERIFIED = 'Email not verified';
+export const INVALID_TOKEN = 'Invalid token'

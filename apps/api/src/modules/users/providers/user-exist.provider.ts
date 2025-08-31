@@ -15,6 +15,42 @@ export class UserExistProvider {
     private readonly userRepository: Repository<User>,
   ) {}
 
+  async checkUserExistByEmail(email: string) {
+    try {
+      const user = await this.userRepository.findOne({
+        where: { email: email },
+      });
+
+      if (!user) {
+        throw new NotFoundException(SYS_MSG.USER_EXIST);
+      }
+
+      return user;
+    } catch (err) {
+      throw new RequestTimeoutException(err, {
+        description: SYS_MSG.DB_CONNECTION_ERROR,
+      });
+    }
+  }
+
+  async checkUserNotExistByEmail(email: string) {
+    try {
+      const user = await this.userRepository.findOne({
+        where: { email: email },
+      });
+
+      if (user) {
+        throw new NotFoundException(SYS_MSG.USER_EXIST);
+      }
+
+      return user;
+    } catch (err) {
+      throw new RequestTimeoutException(err, {
+        description: SYS_MSG.DB_CONNECTION_ERROR,
+      });
+    }
+  }
+
   async checkUserExist(id: string) {
     try {
       const user = await this.userRepository.findOneOrFail({ where: { id } });

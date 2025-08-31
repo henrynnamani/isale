@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OTP Verification</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f7fc;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .header h1 {
+      color: #4a90e2;
+      font-size: 28px;
+      margin: 0;
+    }
+    .otp-code {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 20px 0;
+    }
+    .otp-box {
+      font-size: 30px;
+      font-weight: bold;
+      padding: 15px 25px;
+      border: 2px solid #4a90e2;
+      border-radius: 8px;
+      background-color: #e5f0fc;
+      color: #4a90e2;
+    }
+    .message {
+      font-size: 16px;
+      color: #333;
+      line-height: 1.6;
+      text-align: center;
+    }
+    .cta-button {
+      display: block;
+      text-align: center;
+      margin-top: 30px;
+    }
+    .cta-button a {
+      background-color: #4a90e2;
+      color: #fff;
+      text-decoration: none;
+      padding: 15px 30px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 30px;
+      transition: background-color 0.3s;
+    }
+    .cta-button a:hover {
+      background-color: #357ab7;
+    }
+    .footer {
+      margin-top: 40px;
+      font-size: 14px;
+      color: #888;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>{{subject}}</h1>
+    </div>
+    
+    <div class="message">
+      <p>Hi {{name}},</p>
+      <p>We’ve received a request to verify your identity. Please use the OTP below to complete the verification:</p>
+    </div>
+    
+    <div class="otp-code">
+      <div class="otp-box">
+        {{otp}}
+      </div>
+    </div>
+    
+    <div class="message">
+      <p>This OTP is valid for <strong>2 minutes</strong> and can only be used once. If you didn’t request this, please ignore this email.</p>
+    </div>
+    
+    <div class="cta-button">
+      <a href="{{verification_url}}">Verify Now</a>
+    </div>
+
+    <div class="footer">
+      <p>Thank you for using our service!</p>
+      <p>If you need assistance, feel free to contact us.</p>
+    </div>
+  </div>
+</body>
+</html>
