@@ -1,7 +1,6 @@
 import { Brand } from '@/modules/brand/model/brand.entity';
 import { Category } from '@/modules/category/model/category.entity';
 import { Color } from '@/modules/color/model/color.entity';
-import { OrderItem } from '@/modules/order/model/order-item.entity';
 import { Ram } from '@/modules/ram/model/ram.entity';
 import { Rom } from '@/modules/rom/model/rom.entity';
 import { Vendor } from '@/modules/vendors/model/vendors.entity';
@@ -13,11 +12,9 @@ import {
   BeforeUpdate,
   Column,
   Entity,
-  JoinColumn,
   JoinTable,
   ManyToMany,
   ManyToOne,
-  OneToOne,
 } from 'typeorm';
 
 @Entity('product')

@@ -7,6 +7,8 @@ import * as SYS_MSG from '@/shared/system-message';
 import { VendorExistProvider } from '@/modules/vendors/providers/vendor-exist.provider';
 import { Vendor } from '@/modules/vendors/model/vendors.entity';
 import { User } from '@/modules/users/model/users.entity';
+import { DeleteReviewDto } from '../dto/delete-review.dto';
+import { ReviewExistProvider } from '../providers/review-exist.provider';
 
 @Injectable()
 export class ReviewService {
@@ -14,6 +16,7 @@ export class ReviewService {
     @InjectRepository(Review)
     private readonly reviewRepository: Repository<Review>,
     private readonly vendorExist: VendorExistProvider,
+    private readonly reviewExistProvider: ReviewExistProvider,
   ) {}
   async createReview(addReviewDto: CreateReviewDto) {
     try {
@@ -32,6 +35,27 @@ export class ReviewService {
       return {
         data: review,
         message: SYS_MSG.REVIEW_CREATED_SUCCESSFULLY,
+      };
+    } catch (err) {
+      throw new RequestTimeoutException(err, {
+        description: SYS_MSG.DB_CONNECTION_ERROR,
+      });
+    }
+  }
+
+  async deleteReview(deleteReviewDto: DeleteReviewDto) {
+    const review = await this.reviewExistProvider.checkReviewExist(
+      deleteReviewDto.id,
+    );
+
+    try {
+      await this.reviewRepository.delete({
+        id: review.id,
+      });
+
+      return {
+        data: review,
+        message: SYS_MSG.REVIEW_DELETED_SUCCESSFULLY,
       };
     } catch (err) {
       throw new RequestTimeoutException(err, {

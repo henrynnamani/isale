@@ -6,7 +6,7 @@ import { CreateDoc, CreateGetDoc } from '@/shared/doc-response';
 import { ClearCartParamDto } from './dto/clear-cart.dto';
 
 @ApiTags('cart')
-@Controller('cart')
+@Controller('carts')
 export class CartController {
   constructor(private readonly cartService: CartService) {}
 

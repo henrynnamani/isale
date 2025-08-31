@@ -6,6 +6,7 @@ import {
   ApiResponse,
   ApiBadRequestResponse,
   getSchemaPath,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -20,12 +21,47 @@ export class DocResponse<T> {
   data?: T;
 }
 
+export const CreateAuthDoc = (summary: string, dto: Type<any>) =>
+  applyDecorators(
+    ApiOperation({ summary }),
+    ApiBody({
+      type: dto,
+      description: `${summary} request body`,
+    }),
+    ApiExtraModels(DocResponse, dto),
+    ApiResponse({
+      status: 201,
+      description: `${summary} success response`,
+      schema: {
+        allOf: [
+          { $ref: getSchemaPath(DocResponse) },
+          {
+            properties: {
+              data: { $ref: getSchemaPath(dto) },
+            },
+          },
+        ],
+      },
+    }),
+    ApiBadRequestResponse({
+      description: 'Invalid input or bad request',
+      schema: {
+        example: {
+          data: null,
+          message: 'Bad request',
+          success: false,
+        },
+      },
+    }),
+  );
+
 export const CreateDoc = (
   summary: string,
   dto: Type<any>, // dynamically accept DTO
 ) =>
   applyDecorators(
     ApiOperation({ summary }),
+    ApiBearerAuth(),
     ApiBody({
       type: dto,
       description: `${summary} request body`,
@@ -63,6 +99,7 @@ export const CreateGetDoc = (
 ) =>
   applyDecorators(
     ApiOperation({ summary }),
+    ApiBearerAuth(),
     ApiExtraModels(DocResponse, dto),
     ApiResponse({
       status: 201,

@@ -5,7 +5,7 @@ import { createRomDoc } from './doc/add-rom.doc';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('rom')
-@Controller('rom')
+@Controller('roms')
 export class RomController {
   constructor(private readonly romService: RomService) {}
 

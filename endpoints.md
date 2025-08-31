@@ -29,43 +29,5 @@ CREATE USER -POST /users ✅
 <ADMIN>
 VIEW ANALYTICS -GET /analytics
 
-<PRODUCT>
-ADD PRODUCT -POST /products
-DELETE PRODUCT(SOFT) -DELETE /products/:id
-UPDATE PRODUCT -PATCH /products/:id
-RESTOCK PRODUCT -PATCH /products/:id
-VIEW PRODUCTS - GET /products
-
-<RAM>
-ADD RAM SIZE -POST /ram
-DELETE RAM SIZE -POST /ram/:id
-
-<ROM>
-ADD RAM SIZE -POST /rom
-DELETE RAM SIZE -POST /rom/:id
-
-<VENDOR>
-CREATE VENDOR -POST /vendors ✅
-DEACTIVATE VENDOR -PATCH /vendors/:id/deactivate ✅
-VERIFY VENDOR -PATCH /vendors/:id/activate ✅
-VIEW VENDORS -GET /vendors
-
-<BRAND>
-ADD BRAND -POST /brand
-DELETE BRAND -DELETE /brand/:id
-PATCH BRAND -PATCH /brand/:id
-
-<REVIEW>
-ADD REVIEW -POST /product/review
-DELETE REVIEW - DELETE /product/review/:id
-
-<PAYMENT_METHOD>
-ADD PAYMENT METHOD -POST /payment/method
-REMOVE PAYMENT METHOD -DELETE /payment/method/:id
-
-<PAYMENT>
-ADD PAYMENT RECORD -POST /payment
-
-<ORDER>
-PLACE ORDER -POST /orders
-UPDATE ORDER STATUS -PATCH /orders/:id
+- Integrate Crypto Payment
+- Paginate get orders

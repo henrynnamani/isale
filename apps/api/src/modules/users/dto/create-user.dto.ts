@@ -6,51 +6,55 @@ import {
   IsOptional,
   IsString,
   IsStrongPassword,
+  Matches,
 } from 'class-validator';
 import { UserRoleEnum } from 'src/shared/enum/user-role.enum';
 
 export class CreateUserDto {
   @ApiProperty({
-    example: 'Felix',
-    required: true,
+    example: 'Joy akpan',
+    description: 'User name',
   })
   @IsString()
   @IsNotEmpty()
   name: string;
 
   @ApiProperty({
-    example: 'felix@gmail.com',
-    required: true,
+    example: 'joy@gmail.com',
+    description: 'User email',
   })
   @IsEmail()
   @IsNotEmpty()
   email: string;
 
-  @ApiPropertyOptional({
-    example: 'becoming@TheBest8',
+  @ApiProperty({
+    example: 'Pyr@hornet01038sd',
+    description: 'User password',
   })
   @IsStrongPassword({
     minLength: 8,
-    minUppercase: 1,
     minLowercase: 1,
-    minSymbols: 1,
+    minUppercase: 1,
+    minNumbers: 1,
   })
-  @IsOptional()
   password: string;
 
-  @ApiPropertyOptional({
-    example: '1u2819388googleID',
+  @ApiProperty({
+    example: '+2347052899465',
+    description: 'User phone number',
   })
-  @IsOptional()
   @IsString()
-  googleId: string;
+  @Matches(/^\+234[0-9]{10}$/, {
+    message: 'Phone number must start with +234 and be followed by 10 digits',
+  })
+  phoneNumber: string;
 
   @ApiPropertyOptional({
-    example: UserRoleEnum.USER,
     enum: UserRoleEnum,
-    required: true,
+    default: UserRoleEnum.USER,
+    description: 'Default role',
   })
   @IsEnum(UserRoleEnum)
   @IsOptional()
-  role: UserRoleEnum;
+  role?: UserRoleEnum;
 }

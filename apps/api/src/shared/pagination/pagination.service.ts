@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { Repository, SelectQueryBuilder } from 'typeorm';
-import { CursorPaginationDto } from './pagination.dto';
+import { ObjectLiteral, Repository, SelectQueryBuilder } from 'typeorm';
+import { CursorPaginationDto, PaginationDto } from './pagination.dto';
+import { IsNumber, IsOptional } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 
 interface CursorEntity {
   id: string;
@@ -49,6 +52,43 @@ export class PaginationService {
       products: results,
       nextCursor: hasNextPage ? results[results.length - 1].id : null,
       hasNextPage,
+    };
+  }
+
+  async paginateQuery<T extends ObjectLiteral>(
+    source: Repository<T> | SelectQueryBuilder<T>,
+    paginationDto: PaginationDto,
+  ) {
+    console.log(paginationDto);
+    const { page, limit } = paginationDto;
+
+    console.log(limit);
+    const skip = (page - 1) * limit;
+
+    const qb =
+      source instanceof Repository
+        ? source.createQueryBuilder('entity').orderBy('entity.createdAt', 'ASC')
+        : source;
+
+    const [data, totalItems] = await qb
+      .skip(skip)
+      .take(limit)
+      .getManyAndCount();
+
+    console.log(qb.getSql());
+
+    const totalPages = Math.ceil(totalItems / limit);
+    const nextPage = page < totalPages ? page + 1 : null;
+
+    return {
+      data,
+      meta: {
+        currentPage: page,
+        itemsPerPage: limit,
+        totalItems,
+        totalPages,
+        nextPage,
+      },
     };
   }
 }

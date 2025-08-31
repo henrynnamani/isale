@@ -1,5 +1,6 @@
 import { Cart } from '@/modules/cart/model/cart.entity';
 import { Order } from '@/modules/order/model/order.entity';
+import { Otp } from '@/modules/otp/model/otp.entity';
 import { Review } from '@/modules/review/model/review.entity';
 import { BaseModel } from 'src/shared/base-entity';
 import { UserRoleEnum } from 'src/shared/enum/user-role.enum';
@@ -18,6 +19,22 @@ export class User extends BaseModel {
     nullable: false,
   })
   email: string;
+
+  @Column({
+    type: 'boolean',
+    nullable: false,
+    default: false,
+  })
+  emailVerified: boolean;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  refreshToken?: string;
+
+  @OneToMany(() => Otp, (otp) => otp.user)
+  otps: Otp[];
 
   @Column({
     type: 'varchar',
