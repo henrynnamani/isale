@@ -1,4 +1,9 @@
 /** @type {import('next').NextConfig} */
-module.exports = {
+const nextConfig = {
   transpilePackages: ['@repo/ui'],
+  images: {
+    domains: ['i.pinimg.com'],
+  },
 };
+
+module.exports = nextConfig;
