@@ -37,7 +37,7 @@ export function Hero() {
               <Image
                 src={image}
                 alt={`carousel-${index}`}
-                fill
+                fill  
                 className="rounded-lg object-fill"
               />
             </div>

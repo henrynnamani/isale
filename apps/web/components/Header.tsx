@@ -1,7 +1,10 @@
 import {
   BellIcon,
+  Building,
   Handbag,
   HomeIcon,
+  List,
+  Package,
   SearchIcon,
   ShoppingBag,
 } from 'lucide-react';
@@ -12,7 +15,7 @@ const Header = () => {
     <div className="w-full flex items-center justify-between">
       <div className="flex items-center gap-2">
         <div>
-          <span className="text-2xl font-bold">I4sale</span>
+          <span className="text-2xl font-bold">Graey</span>
           <span className="text-blue-400 font-semibold">.co</span>
         </div>
         <div className="p-2 rounded-full border flex items-center justify-between px-4 border-gray-300 relative">
@@ -27,12 +30,18 @@ const Header = () => {
             </div>
           </div>
         </div>
-        <BellIcon />
+        <BellIcon size={18} />
       </div>
       <div className="flex gap-5 items-center">
-        <div className="flex gap-1">
-          <ShoppingBag />
-          <span className="font-medium">Cart</span>
+        <div className="flex gap-5">
+          <div className="border p-2 rounded-full flex items-center gap-2">
+            <ShoppingBag />
+            <span className="font-medium">Cart</span>
+          </div>
+          <div className="border p-2 rounded-full flex items-center gap-2">
+            <Package />
+            <span className="font-medium">Order</span>
+          </div>
         </div>
         <div className="bg-blue-400 rounded-full flex items-center justify-center w-30 h-12">
           <span className="text-white font-bold">Login</span>
