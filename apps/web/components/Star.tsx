@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const Star = ({ filled, onClick, onMouseEnter, onMouseLeave }) => (
+const Star = ({ filled, onClick, onMouseEnter, onMouseLeave }: any) => (
   <svg
     onClick={onClick}
     onMouseEnter={onMouseEnter}
@@ -20,7 +20,7 @@ const Star = ({ filled, onClick, onMouseEnter, onMouseLeave }) => (
   </svg>
 );
 
-export default function StarRating({ rating, setRating }) {
+export default function StarRating({ rating, setRating }: any) {
   const [hover, setHover] = useState(0);
 
   return (
