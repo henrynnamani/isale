@@ -8,7 +8,7 @@ const page = () => {
   return (
     <div className="gap-8 space-y-8">
       <Hero />
-      <ProductCategory label="Popular Product" />
+      <ProductCategory label="Discount Product" />
       <ProductDiscovery />
     </div>
   );
