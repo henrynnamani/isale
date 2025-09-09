@@ -1,9 +1,12 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
-import { OrderTimeline } from '@/components/OrderTimeline';
+import { Verified } from 'lucide-react';
+import Stepper from '@keyvaluesystems/react-stepper';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import StarRating from '@/components/Star';
 
 const mockOrders = [
   {
@@ -21,6 +24,18 @@ const mockOrders = [
     ],
   },
 ];
+
+const styles = {
+  LineSeparator: () => ({
+    backgroundColor: '#028A0F',
+  }),
+  ActiveNode: () => ({
+    backgroundColor: '#028A0F',
+  }),
+  CompletedNode: () => ({
+    backgroundColor: '#028A0F',
+  }),
+};
 
 const statusColor: Record<string, string> = {
   pending: 'bg-yellow-100 text-yellow-800',
@@ -54,19 +69,25 @@ const OrderDetailPage = () => {
       </button>
 
       {/* Product Summary */}
-      <div className="flex gap-6 bg-white shadow-sm rounded-lg p-4 mb-6 border">
-        <Image
-          src={order.image}
-          alt={order.product}
-          width={120}
-          height={120}
-          className="rounded-md object-cover border"
-        />
-        <div className="flex flex-col justify-between">
-          <div>
+      <div className="flex gap-6 bg-white shadow-sm rounded-lg p-4 mb-6 border flex-col md:flex-row">
+        <div className="flex flex-1 gap-3 h-40 md:flex-row flex-col">
+          <img
+            src={order.image}
+            alt={order.product}
+            // width={80}
+            // height={80}
+            className="rounded-md object-cover border w-full md:w-52 md:h-36 h-44"
+          />
+          <div className="flex flex-col gap-1">
             <h1 className="text-xl font-semibold">{order.product}</h1>
+            <div className="text-muted-foreground flex gap-2 items-center">
+              <span>@Vintech</span>
+              <Verified size={18} />
+            </div>
             <p className="text-muted-foreground">{order.price}</p>
           </div>
+        </div>
+        <div className="h-fit w-fit">
           <Badge className={`mt-2 w-fit ${statusColor[order.status]}`}>
             {order.status.toUpperCase()}
           </Badge>
@@ -90,17 +111,36 @@ const OrderDetailPage = () => {
       {/* Order Timeline */}
       <div className="mb-8">
         <h2 className="font-semibold text-lg mb-3">Tracking Progress</h2>
-        <OrderTimeline history={order.history} />
+        <Stepper
+          orientation={'vertical'}
+          styles={styles}
+          steps={[
+            {
+              stepLabel: 'Pending',
+              // stepDescription: 'This is Step 1',
+              completed: true,
+            },
+            {
+              stepLabel: 'On Delivery',
+              // stepDescription: 'This is Step 2',
+              completed: true,
+            },
+            {
+              stepLabel: 'Completed',
+              // stepDescription: 'This is Step 3',
+              completed: true,
+            },
+          ]}
+          currentStepIndex={1}
+        />
       </div>
 
-      {/* Action Buttons */}
-      <div className="flex flex-wrap gap-3">
-        <button className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md">
-          Cancel Order
-        </button>
-        <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">
-          Contact Support
-        </button>
+      <h2 className="font-semibold text-lg mb-3">Rating and Review</h2>
+      <StarRating rating={0} setRating={() => {}} />
+
+      <div className="grid w-full gap-3 mt-3">
+        <Textarea placeholder="Type your message here." />
+        <Button>Send message</Button>
       </div>
     </div>
   );

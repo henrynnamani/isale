@@ -7,9 +7,9 @@ const ProductCard = () => {
     <Link href={'/4'}>
       <div
         key={'learning'}
-        className=" bg-white rounded-lg w-[300px] shadow-md flex-shrink-0 overflow-hidden border hover:shadow-2xl transition-shadow duration-300"
+        className=" bg-white rounded-lg md:w-[300px] w-[200px] shadow-md flex-shrink-0 overflow-hidden border hover:shadow-2xl transition-shadow duration-300"
       >
-        <div className="relative w-full h-64 bg-gray-100">
+        <div className="relative w-full md:h-64 h-30 bg-gray-100">
           <Image
             src="https://i.pinimg.com/736x/fd/f3/4c/fdf34c1e3d18ac99ce44acfe4d9f45aa.jpg"
             alt="iPhone 15 Pro"
@@ -32,7 +32,7 @@ const ProductCard = () => {
           <div className="text-lg font-semibold text-gray-800 mb-4">N457k</div>
 
           {/* Colors */}
-          <div className="flex items-center gap-2 mb-4">
+          <div className="hidden items-center gap-2 mb-4 md:flex">
             <span className="text-sm text-gray-600 mr-2">Colors:</span>
             <span className="w-5 h-5 rounded-full bg-gray-900 border border-gray-300"></span>
             <span className="w-5 h-5 rounded-full bg-blue-500 border border-gray-300"></span>

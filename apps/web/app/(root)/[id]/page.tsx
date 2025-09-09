@@ -37,6 +37,7 @@ import Image from 'next/image';
 import { Marquee } from '@/components/magicui/marquee';
 import { cn } from '@/components/lib/utils';
 import ProductCard from '@/components/product/product-card';
+import ProductCarousel from '@/components/product/product-carousel';
 
 const images = [
   'https://i.pinimg.com/736x/af/da/f0/afdaf06687561353091785825a3a7e78.jpg',
@@ -158,8 +159,8 @@ const page = () => {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div className="flex col-span-2 p-4 gap-10">
-        <div className="w-[50%]">
+      <div className="flex flex-col md:flex-row md:col-span-2 p-4 gap-10">
+        <div className="md:w-[50%] w-[85%] flex flex-col">
           <Image
             src={
               'https://i.pinimg.com/736x/cb/2a/d0/cb2ad0bbc24149758f88797d22b54ab7.jpg'
@@ -184,7 +185,9 @@ const page = () => {
         </div>
         <div className="flex flex-col gap-4 flex-1">
           <div className="gap-3 flex flex-col">
-            <span className="font-semibold text-xl">Iphone 12 Pro Max</span>
+            <span className="font-semibold md:text-xl text-lg">
+              Iphone 12 Pro Max
+            </span>
             <div className="flex gap-5 items-center">
               <span className="text-sm">@Vintech store</span>
               <BadgeCheck size={18} color="blue" />
@@ -195,7 +198,7 @@ const page = () => {
                 (4.8 from 350 Reviews)
               </div>
             </div>
-            <span className="font-bold text-2xl">N700,000</span>
+            <span className="font-bold md:text-2xl text-lg">N700,000</span>
           </div>
           <hr />
           <div className="flex gap-5 items-center">
@@ -276,10 +279,10 @@ const page = () => {
             </AccordionItem>
           </Accordion>
           <div className="flex items-center gap-3">
-            <div className="rounded-full flex-1 px-8 py-2 bg-black text-white font-bold text-center">
+            <div className="rounded-full flex-1 md:px-8 md:py-2 px-8 py-4 bg-black text-white font-bold text-center text-sm md:text-lg">
               BUY NOW
             </div>
-            <div className="rounded-full flex-1 border px-8 py-2 text-center font-semibold border-gray-500">
+            <div className="rounded-full flex-1 border md:px-8 md:py-2 px-8 py-4 text-center font-semibold border-gray-500 text-sm md:text-lg">
               ADD TO CART
             </div>
           </div>
@@ -291,7 +294,6 @@ const page = () => {
         </div>
       </div>
 
-      {/* Comment and Reviews */}
       <div>
         <span className="text-lg font-medium">Ratings and Reviews</span>
         <div className="flex items-center space-x-8 justify-between">
@@ -336,11 +338,7 @@ const page = () => {
       {/** Similar Product */}
       <div className="space-y-5 flex flex-col">
         <span className="font-semibold text-lg">Similar Product</span>
-        <div className='grid grid-cols-3 gap-3 w-full mx-auto'>
-          {Array.from({ length: 6 }).map((_) => (
-            <ProductCard />
-          ))}
-        </div>
+        <ProductCarousel />
       </div>
     </div>
   );

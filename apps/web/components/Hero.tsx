@@ -9,7 +9,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
-import { Card, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
 
 export function Hero() {
@@ -26,7 +25,7 @@ export function Hero() {
   return (
     <Carousel
       plugins={[plugin.current]}
-      className="max-w-screen h-64 rounded-lg"
+      className="max-w-screen h-64 rounded-lg mt-5"
       onMouseEnter={plugin.current.stop}
       onMouseLeave={plugin.current.reset}
     >
@@ -37,15 +36,15 @@ export function Hero() {
               <Image
                 src={image}
                 alt={`carousel-${index}`}
-                fill  
+                fill
                 className="rounded-lg object-fill"
               />
             </div>
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
+      <CarouselPrevious className="md:flex hidden" />
+      <CarouselNext className="md:flex hidden" />
     </Carousel>
   );
 }
