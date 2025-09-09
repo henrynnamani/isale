@@ -7,9 +7,9 @@ const ProductCard = () => {
     <Link href={'/4'}>
       <div
         key={'learning'}
-        className=" bg-white rounded-lg md:w-[300px] w-[200px] shadow-md flex-shrink-0 overflow-hidden border hover:shadow-2xl transition-shadow duration-300"
+        className=" bg-white rounded-lg md:w-[300px] w-full shadow-md flex-shrink-0 overflow-hidden border hover:shadow-2xl transition-shadow duration-300"
       >
-        <div className="relative w-full md:h-64 h-30 bg-gray-100">
+        <div className="relative w-full md:h-64 h-52 bg-gray-100">
           <Image
             src="https://i.pinimg.com/736x/fd/f3/4c/fdf34c1e3d18ac99ce44acfe4d9f45aa.jpg"
             alt="iPhone 15 Pro"
