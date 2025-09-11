@@ -6,6 +6,8 @@ import {
   Handbag,
   HomeIcon,
   List,
+  ListFilter,
+  ListIcon,
   Package,
   SearchIcon,
   ShoppingBag,
@@ -23,6 +25,25 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { Button } from './ui/button';
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from '@/components/ui/drawer';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from './ui/select';
+import { Input } from './ui/input';
+import { Slider } from './ui/slider';
 
 const Header = () => {
   const [cartItems, setCartItems] = useState([
@@ -44,12 +65,19 @@ const Header = () => {
     },
   ]);
 
+  const [category, setCategory] = useState('');
+  const [ram, setRam] = useState('');
+  const [price, setPrice] = useState([500000]);
+  const [batteryHealth, setBatteryHealth] = useState('');
+
+  const handleSubmit = () => {};
+
   const removeFromCart = (id: number) => {
     setCartItems((prev) => prev.filter((item) => item.id !== id));
   };
 
   return (
-    <div className="w-full flex items-center justify-between py-3">
+    <div className="w-full flex items-center justify-between py-3 sticky top-0 z-50 bg-white">
       <div className="flex items-center gap-2">
         <div>
           <span className="text-2xl font-bold">Graey</span>
@@ -67,7 +95,90 @@ const Header = () => {
             </div>
           </div>
         </div>
-        <BellIcon size={18} />
+        <BellIcon size={18} className="hidden md:flex" />
+        <Drawer>
+          <DrawerTrigger>
+            <ListFilter size={20} className="md:hidden flex" />
+          </DrawerTrigger>
+
+          <DrawerContent>
+            <DrawerHeader>
+              <DrawerTitle>Filter</DrawerTitle>
+              <DrawerDescription>Filter iPhones by specs</DrawerDescription>
+            </DrawerHeader>
+
+            <div className="px-4 space-y-4 pb-6">
+              {/* Category Filter */}
+              <div>
+                <label className="text-sm font-medium">Category</label>
+                <Select onValueChange={setCategory}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All</SelectItem>
+                    <SelectItem value="iPhone 14">iPhone 14</SelectItem>
+                    <SelectItem value="iPhone 15">iPhone 15</SelectItem>
+                    <SelectItem value="iPhone SE">iPhone SE</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* RAM Filter */}
+              <div>
+                <label className="text-sm font-medium">RAM</label>
+                <Select onValueChange={setCategory}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="any">any</SelectItem>
+                    <SelectItem value="iPhone 14">16GB</SelectItem>
+                    <SelectItem value="iPhone 15">32GB</SelectItem>
+                    <SelectItem value="iPhone SE">64GB</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Price Range Filter */}
+              <div className="gap-2 flex flex-col">
+                <label className="text-sm font-medium">Price (Max)</label>
+                <div className="flex justify-between text-sm text-muted-foreground">
+                  <span>N100,000</span>
+                  <span>Max: N{price[0]?.toLocaleString()}</span>
+                  <span>N1,000,000</span>
+                </div>
+                <Slider
+                  min={100000}
+                  max={1000000}
+                  step={10000}
+                  value={price}
+                  onValueChange={setPrice}
+                />
+              </div>
+
+              {/* Battery Health Filter */}
+              <div>
+                <label className="text-sm font-medium">
+                  Battery Health (%)
+                </label>
+                <Input
+                  type="number"
+                  placeholder="e.g. 85"
+                  value={batteryHealth}
+                  onChange={(e) => setBatteryHealth(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <DrawerFooter>
+              <Button onClick={handleSubmit}>Apply Filters</Button>
+              <DrawerClose>
+                <Button variant="outline">Cancel</Button>
+              </DrawerClose>
+            </DrawerFooter>
+          </DrawerContent>
+        </Drawer>
       </div>
       <div className="gap-5 items-center  hidden md:flex">
         <div className="flex gap-5">

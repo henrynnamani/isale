@@ -1,4 +1,4 @@
-'use server';
+'use client';
 
 import {
   BadgeCheck,
@@ -10,7 +10,7 @@ import {
   Verified,
   VerifiedIcon,
 } from 'lucide-react';
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import {
   Breadcrumb,
@@ -123,6 +123,8 @@ const ReviewCard = ({
 };
 
 const page = () => {
+  const [selectedImage, setSelectedImage] = useState(images[0]);
+
   return (
     <div className="gap-8 flex flex-col mt-10">
       <Breadcrumb>
@@ -160,17 +162,17 @@ const page = () => {
       </Breadcrumb>
 
       <div className="flex flex-col md:flex-row md:col-span-2 p-4 gap-10">
-        <div className="md:w-[50%] w-[85%] flex flex-col">
-          <Image
-            src={
-              'https://i.pinimg.com/736x/cb/2a/d0/cb2ad0bbc24149758f88797d22b54ab7.jpg'
-            }
-            alt="Product detail"
-            className="rounded-sm"
-            width={400}
-            height={200}
-          />
-          <div className="flex gap-4 mt-4">
+        <div className="flex-1 flex flex-col">
+          <div className="w-full">
+            <Image
+              src={selectedImage!}
+              alt="Product detail"
+              className="w-full h-[400px] object-cover rounded-sm"
+              width={1920}
+              height={1080}
+            />
+          </div>
+          <div className={`flex gap-4 mt-4`}>
             {images?.map((image) => (
               <img
                 src={image}
@@ -178,7 +180,8 @@ const page = () => {
                 loading="eager"
                 width={40}
                 height={50}
-                className="w-20 h-20 rounded-sm"
+                className={`w-20 h-20 rounded-sm ${selectedImage === image ? 'border-3 border-gray-500' : ''}`}
+                onClick={() => setSelectedImage(image)}
               />
             ))}
           </div>
