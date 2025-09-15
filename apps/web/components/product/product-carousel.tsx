@@ -13,12 +13,12 @@ export default function ProductCarousel() {
   }, [emblaApi]);
 
   return (
-    <div className="embla" ref={emblaRef}>
-      <div className="embla__container">
-        {Array.from({ length: 10 }).map((_) => (
+    <div className="embla overflow-hidden" ref={emblaRef}>
+      <div className="embla__container flex">
+        {Array.from({ length: 10 }).map((_, index) => (
           <div
-            key={11}
-            className="flex-[0_0_100%] sm:flex-[0_0_50%] md:flex-[0_0_33.3333%] px-2"
+            key={index}
+            className="flex-[0_0_90%] sm:flex-[0_0_45%] md:flex-[0_0_30%] px-2"
           >
             <ProductCard />
           </div>

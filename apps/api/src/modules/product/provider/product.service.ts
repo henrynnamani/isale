@@ -26,7 +26,6 @@ export class ProductService {
   ) {}
 
   async createProduct(createProductDto: CreateProductDto) {
-    // upload image
     const product =
       await this.saveProductProvider.saveProduct(createProductDto);
 
@@ -40,6 +39,7 @@ export class ProductService {
     const result = await this.paginationService.cursorPaginate(
       this.productRepository,
       paginationDto,
+      ['roms', 'rams', 'colors', 'vendor'],
     );
 
     return {
@@ -124,6 +124,7 @@ export class ProductService {
     const result = await this.paginationService.cursorPaginate(
       query,
       paginationDto,
+      ['colors', 'rams', 'roms'],
     );
 
     return {
@@ -175,15 +176,31 @@ export class ProductService {
     try {
       const product = await this.productExistProvider.checkProductExist(id);
 
-      product.battery = updateProductDto.batteryHealth;
-      product.condition = updateProductDto.condition;
-      product.specification = JSON.parse(updateProductDto.specification);
-      product.images = updateProductDto.images;
-      product.price = updateProductDto.price;
-      product.name = updateProductDto.name;
-      product.colors = updateProductDto.colors as unknown as Color[];
-      product.rams = updateProductDto.rams as unknown as Ram[];
-      product.roms = updateProductDto.roms as unknown as Rom[];
+      product.battery = updateProductDto.batteryHealth
+        ? updateProductDto.batteryHealth
+        : product.battery;
+      product.condition = updateProductDto.condition
+        ? updateProductDto.condition
+        : product.condition;
+      product.specification = updateProductDto.specification
+        ? JSON.parse(updateProductDto.specification)
+        : product.specification;
+      product.images = updateProductDto.images
+        ? updateProductDto.images
+        : product.images;
+      product.price = updateProductDto.price
+        ? updateProductDto.price
+        : product.price;
+      product.name = updateProductDto.name
+        ? updateProductDto.name
+        : product.name;
+      product.colors =
+        updateProductDto.colors &&
+        (updateProductDto.colors as unknown as Color[]);
+      product.rams =
+        updateProductDto.rams && (updateProductDto.rams as unknown as Ram[]);
+      product.roms =
+        updateProductDto.roms && (updateProductDto.roms as unknown as Rom[]);
 
       await this.productRepository.update({ id }, product);
 
@@ -213,6 +230,7 @@ export class ProductService {
       const result = await this.paginationService.cursorPaginate(
         query,
         paginationDto,
+        [],
       );
 
       return {

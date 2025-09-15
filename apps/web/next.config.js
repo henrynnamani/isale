@@ -2,7 +2,7 @@
 const nextConfig = {
   transpilePackages: ['@repo/ui'],
   images: {
-    domains: ['i.pinimg.com'],
+    domains: ['i.pinimg.com', 'www.pinterest.com'],
   },
 };
 

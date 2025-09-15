@@ -1,15 +1,6 @@
 'use client';
 
-import {
-  BadgeCheck,
-  ChevronLeft,
-  ShieldCheck,
-  Star,
-  StarHalfIcon,
-  StarIcon,
-  Verified,
-  VerifiedIcon,
-} from 'lucide-react';
+import { BadgeCheck, Star } from 'lucide-react';
 import React, { useState } from 'react';
 import Link from 'next/link';
 import {
@@ -23,8 +14,6 @@ import {
 } from '@/components/ui/breadcrumb';
 import {
   DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
@@ -36,8 +25,9 @@ import {
 import Image from 'next/image';
 import { Marquee } from '@/components/magicui/marquee';
 import { cn } from '@/components/lib/utils';
-import ProductCard from '@/components/product/product-card';
 import ProductCarousel from '@/components/product/product-carousel';
+import useProduct from '@/store/product';
+import { useRouter } from 'next/navigation';
 
 const images = [
   'https://i.pinimg.com/736x/af/da/f0/afdaf06687561353091785825a3a7e78.jpg',
@@ -123,7 +113,15 @@ const ReviewCard = ({
 };
 
 const page = () => {
+  const product = useProduct((state) => state.product);
   const [selectedImage, setSelectedImage] = useState(images[0]);
+  const router = useRouter();
+  const saveProductDetail = useProduct((state) => state.saveProductDetail);
+
+  const checkoutPage = (product: any) => {
+    saveProductDetail(product);
+    router.push(`/checkout`);
+  };
 
   return (
     <div className="gap-8 flex flex-col mt-10">
@@ -141,11 +139,6 @@ const page = () => {
                 <BreadcrumbEllipsis className="size-4" />
                 <span className="sr-only">Toggle menu</span>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="start">
-                <DropdownMenuItem>Documentation</DropdownMenuItem>
-                <DropdownMenuItem>Themes</DropdownMenuItem>
-                <DropdownMenuItem>GitHub</DropdownMenuItem>
-              </DropdownMenuContent>
             </DropdownMenu>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
@@ -156,7 +149,7 @@ const page = () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Iphone 12 Pro Max</BreadcrumbPage>
+            <BreadcrumbPage>{product?.product?.name}</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -165,7 +158,7 @@ const page = () => {
         <div className="flex-1 flex flex-col">
           <div className="w-full">
             <Image
-              src={selectedImage!}
+              src={product?.product?.images[0]}
               alt="Product detail"
               className="w-full h-[400px] object-cover rounded-sm"
               width={1920}
@@ -173,7 +166,7 @@ const page = () => {
             />
           </div>
           <div className={`flex gap-4 mt-4`}>
-            {images?.map((image) => (
+            {product?.product?.images?.map((image) => (
               <img
                 src={image}
                 alt={`image-${1283}`}
@@ -189,19 +182,17 @@ const page = () => {
         <div className="flex flex-col gap-4 flex-1">
           <div className="gap-3 flex flex-col">
             <span className="font-semibold md:text-xl text-lg">
-              Iphone 12 Pro Max
+              {product?.product?.name}
             </span>
             <div className="flex gap-5 items-center">
-              <span className="text-sm">@Vintech store</span>
-              <BadgeCheck size={18} color="blue" />
-              {/* {Array.from({ length: 5 }).map((index) => (
-                <Star color="yellow" size={20} className="text-yellow-400" />
-              ))} */}
-              <div className="text-gray-600 text-sm">
-                (4.8 from 350 Reviews)
-              </div>
+              <span className="text-sm">@{product?.product?.vendor?.name}</span>
+              {product?.product?.vendor?.isVerified && (
+                <BadgeCheck size={18} color="blue" />
+              )}
             </div>
-            <span className="font-bold md:text-2xl text-lg">N700,000</span>
+            <span className="font-bold md:text-2xl text-lg">
+              N{parseInt(product?.product?.price).toLocaleString()}
+            </span>
           </div>
           <hr />
           <div className="flex gap-5 items-center">
@@ -211,26 +202,31 @@ const page = () => {
               </span>
               :{' '}
               <span className="text-sm border p-2 rounded-full">
-                Refurbished
+                {product?.product?.condition}
               </span>
             </div>
             <div>
               <span className="text-sm font-medium text-gray-600">RAM</span>:{' '}
-              <span className="text-sm border p-2 rounded-full">32gb</span>
+              <span className="text-sm border p-2 rounded-full">
+                {product?.product?.rams[0].size}gb
+              </span>
             </div>
           </div>
           <div className="flex gap-5 mt-3 items-center">
             <div>
               <span className="text-sm font-medium text-gray-600 rounded-full border p-2">
-                True Tone
+                {product?.product?.trueTone ? '✅' : '🚫'} True Tone
               </span>
             </div>
             <div>
               <span className="text-sm font-medium text-gray-600 rounded-full border p-2">
-                Face ID
+                {product?.product?.trueTone ? '✅' : '🚫'} Face ID
               </span>
             </div>
-            <div className="p-3 border rounded-full bg-yellow-500"></div>
+            <div
+              className={`p-3 border rounded-full`}
+              style={{ backgroundColor: `#${product?.product?.colors[0].hex}` }}
+            ></div>
           </div>
           <Accordion
             type="single"
@@ -242,11 +238,13 @@ const page = () => {
               <AccordionTrigger>Product Information</AccordionTrigger>
               <AccordionContent className="flex flex-col gap-4 text-balance">
                 <ul className="list-disc pl-5">
-                  <li>Battery: Li-Po, 5000 mAh</li>
-                  <li>Camera: 108MP</li>
-                  <li>RAM: 8GB,128GB</li>
-                  <li>Display: 6.6 inches, 104.6 cm2</li>
-                  <li>OS: Android 13 Network: LTE</li>
+                  {Object.entries(
+                    JSON.parse(product?.product?.specification),
+                  ).map(([key, value]) => (
+                    <li
+                      key={key}
+                    >{`${key.charAt(0).toUpperCase() + key.slice(1)}: ${value}`}</li>
+                  ))}
                 </ul>
               </AccordionContent>
             </AccordionItem>
@@ -282,10 +280,13 @@ const page = () => {
             </AccordionItem>
           </Accordion>
           <div className="flex items-center gap-3">
-            <div className="rounded-full flex-1 md:px-8 md:py-2 px-8 py-4 bg-black text-white font-bold text-center text-sm md:text-lg">
+            <div
+              onClick={() => checkoutPage(product)}
+              className="rounded-full cursor-pointer flex-1 md:px-8 md:py-2 px-8 py-4 bg-black text-white font-bold text-center text-sm md:text-lg"
+            >
               BUY NOW
             </div>
-            <div className="rounded-full flex-1 border md:px-8 md:py-2 px-8 py-4 text-center font-semibold border-gray-500 text-sm md:text-lg">
+            <div className="rounded-full cursor-pointer flex-1 border md:px-8 md:py-2 px-8 py-4 text-center font-semibold border-gray-500 text-sm md:text-lg">
               ADD TO CART
             </div>
           </div>

@@ -1,53 +1,65 @@
+import useProduct from '@/store/product';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
+import { useRouter } from 'next/navigation';
 
-const ProductCard = ({ popular }: { popular?: boolean }) => {
+const ProductCard = (product: any) => {
+  const router = useRouter();
+  const saveProductDetail = useProduct((state: any) => state.saveProductDetail);
+
+  const viewProduct = (product: any) => {
+    saveProductDetail(product);
+    router.push(`/product/${product.id}`);
+  };
+
   return (
-    <Link href={'/4'}>
-      <div
-        key={'learning'}
-        className={` bg-white rounded-lg ${popular ? 'md:w-[250px]' : 'w-full'} shadow-md flex-shrink-0 overflow-hidden border hover:shadow-2xl transition-shadow duration-300`}
-      >
-        <div className="relative w-full md:h-64 h-52 bg-gray-100">
+    <div
+      className="bg-white rounded-lg shadow-sm overflow-hidden border hover:shadow-md transition-shadow duration-300"
+      onClick={() => viewProduct(product)}
+    >
+      {/* Image */}
+      <div className="relative w-full h-36 bg-gray-100">
+        {product?.product?.images[0] ? (
           <Image
-            src="https://i.pinimg.com/736x/fd/f3/4c/fdf34c1e3d18ac99ce44acfe4d9f45aa.jpg"
+            src={product?.product?.images[0]} // Safely access the first image
             alt="iPhone 15 Pro"
-            layout="fill"
-            className="object-cover rounded-lg rounded-b-none"
+            fill
+            className="object-cover"
           />
-        </div>
-
-        {/* Product Info */}
-        <div className="p-6">
-          <h3 className="text-xl font-bold text-gray-900 mb-1">
-            iPhone 15 Pro
-          </h3>
-          <p className="text-sm text-gray-500 mb-3">
-            True Tone · 85% 🔋 · 32GB
-          </p>
-
-          <p className="text-sm text-gray-500 mb-3">Refurbished · Face ID</p>
-
-          <div className="text-lg font-semibold text-gray-800 mb-4">N457k</div>
-
-          {/* Colors
-          <div className="hidden items-center gap-2 mb-4 md:flex">
-            <span className="text-sm text-gray-600 mr-2">Colors:</span>
-            <span className="w-5 h-5 rounded-full bg-gray-900 border border-gray-300"></span>
-            <span className="w-5 h-5 rounded-full bg-blue-500 border border-gray-300"></span>
-            <span className="w-5 h-5 rounded-full bg-white border border-gray-300"></span>
-            <span className="w-5 h-5 rounded-full bg-orange-400 border border-gray-300"></span>
-          </div> */}
-
-          {/* CTA */}
-          <button className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">
-            Buy Now
-          </button>
-          {/* </div> */}
-        </div>
+        ) : (
+          <div className="w-full h-full bg-gray-300 flex items-center justify-center text-gray-600">
+            No Image Available
+          </div>
+        )}
       </div>
-    </Link>
+
+      <div className="p-3">
+        <h3 className="text-base font-semibold text-gray-900 mb-1">
+          {product?.product?.name}
+        </h3>
+        <p className="text-xs text-gray-500 mb-1">
+          {product?.product?.trueTone ? '✅' : '🚫'} True Tone ·{' '}
+          {product?.product?.battery}% 🔋 · {product?.product?.rams[0].size}GB
+        </p>
+        <p className="text-xs text-gray-500 mb-2">
+          {product?.product?.condition} ·{' '}
+          {product?.product?.faceId ? '✅' : '🚫'} Face ID
+        </p>
+
+        <div className="text-sm font-semibold text-gray-800 mb-3">
+          N{parseInt(product?.product?.price).toLocaleString()}
+        </div>
+
+        {/* CTA */}
+        {/* <button
+          onClick={checkoutPage}
+          className="w-full bg-blue-600 text-white text-sm py-1.5 rounded-md hover:bg-blue-700 transition"
+        >
+          Buy Now
+        </button> */}
+      </div>
+    </div>
   );
 };
 

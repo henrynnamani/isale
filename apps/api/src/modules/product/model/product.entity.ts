@@ -40,6 +40,27 @@ export class Product extends BaseModel {
   slug: string;
 
   @Column({
+    type: 'boolean',
+    nullable: true,
+    default: false,
+  })
+  onDiscount: boolean;
+
+  @Column({
+    type: 'boolean',
+    nullable: true,
+    default: false,
+  })
+  trueTone: boolean;
+
+  @Column({
+    type: 'boolean',
+    nullable: true,
+    default: false,
+  })
+  faceId: boolean;
+
+  @Column({
     type: 'jsonb',
     nullable: true,
   })

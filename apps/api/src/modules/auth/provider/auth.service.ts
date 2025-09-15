@@ -11,11 +11,12 @@ import * as SYS_MSG from '@/shared/system-message';
 import { HashingProvider } from './hashing.provider';
 import { JwtProvider } from '../providers/jwt.provider';
 import { UsersService } from '@/modules/users/provider/users.service';
-import { MailService } from '@/modules/mail/provider/mail.service';
 import { OtpService } from '@/modules/otp/provider/otp.service';
 import { LoginDto } from '../dto/login.dto';
 import { RefreshTokenDto } from '../dto/refresh-token.dto';
 import * as bcrypt from 'bcryptjs';
+import { InjectQueue } from '@nestjs/bull';
+import { Queue } from 'bull';
 
 @Injectable()
 export class AuthService {
@@ -24,7 +25,7 @@ export class AuthService {
     private readonly hashingProvider: HashingProvider,
     private readonly userService: UsersService,
     private readonly jwtProvider: JwtProvider,
-    private readonly mailService: MailService,
+    @InjectQueue('mail-queue') private readonly mailQueue: Queue,
     private readonly otpService: OtpService,
   ) {}
   async signup(registerDto: RegisterDto) {
@@ -49,17 +50,12 @@ export class AuthService {
 
       const verification_url = `http://localhost:3000/api/v1/verify?token=${result.code}`;
 
-      await this.mailService.sendEmail(
-        user.email,
-        'OTP Verification',
-        'welcome',
-        {
-          name: user.name,
-          otp: result.code,
-          subject: 'OTP Verification',
-          verification_url,
-        },
-      );
+      await this.mailQueue.add('send-welcome-email', {
+        name: user.name,
+        otp: result.code,
+        subject: 'OTP Verification',
+        verification_url,
+      });
 
       return {
         data: result,

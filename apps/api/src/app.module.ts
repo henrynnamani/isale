@@ -32,6 +32,7 @@ import { MailModule } from './modules/mail/mail.module';
 import mailConfig from './config/mail.config';
 import { OtpModule } from './modules/otp/otp.module';
 import { AuthGuard } from './modules/auth/guard/auth.guard';
+import { MailQueueModule } from './modules/mail-queue/mail-queue.module';
 
 const ENV = process.env.NODE_ENV;
 
@@ -91,6 +92,7 @@ const ENV = process.env.NODE_ENV;
     PaymentModule,
     MailModule,
     OtpModule,
+    MailQueueModule,
   ],
   controllers: [AppController],
   providers: [

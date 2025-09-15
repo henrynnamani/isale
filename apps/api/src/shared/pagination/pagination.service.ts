@@ -15,6 +15,7 @@ export class PaginationService {
   async cursorPaginate<T extends CursorEntity>(
     source: Repository<T> | SelectQueryBuilder<T>,
     paginationDto: CursorPaginationDto,
+    relations: string[],
   ) {
     const { limit, cursor } = paginationDto;
 
@@ -27,11 +28,14 @@ export class PaginationService {
       let cursorEntity: T | null = null;
 
       if (source instanceof Repository) {
-        cursorEntity = await source.findOne({ where: { id: cursor } } as any);
+        cursorEntity = await source.findOne({
+          where: { id: cursor },
+          relations,
+        } as any);
       } else {
         cursorEntity = await source.connection
           .getRepository<T>(qb.alias as any)
-          .findOne({ where: { id: cursor } } as any);
+          .findOne({ where: { id: cursor }, relations } as any);
       }
 
       if (cursorEntity) {
@@ -40,6 +44,10 @@ export class PaginationService {
         });
       }
     }
+
+    relations.forEach((relation) => {
+      qb.leftJoinAndSelect(`${qb.alias}.${relation}`, relation);
+    });
 
     const data = !(source instanceof SelectQueryBuilder)
       ? await qb.take(limit + 1).getMany()

@@ -18,6 +18,7 @@ import { FilterProductDoc } from './doc/filter-product.doc';
 import { ProductDetailDto } from './dto/product-detail.dto';
 import { DeleteProductParamDto } from './dto/delete-param.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { skipAuth } from '@/shared/decorators';
 
 @ApiTags('products')
 @Controller('products')
@@ -30,6 +31,7 @@ export class ProductController {
     return this.productService.createProduct(createProductDto);
   }
 
+  @skipAuth()
   @CreateGetDoc('Fetch all product', CursorPaginationDto)
   @Get('')
   allProducts(@Query() paginationDto: CursorPaginationDto) {

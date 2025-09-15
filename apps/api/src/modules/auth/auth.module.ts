@@ -10,6 +10,7 @@ import { OtpModule } from '../otp/otp.module';
 import { PassportModule } from '@nestjs/passport';
 import { GoogleStrategy } from './strategy/google.strategy';
 import { AuthGuard } from './guard/auth.guard';
+import { MailQueueModule } from '../mail-queue/mail-queue.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { AuthGuard } from './guard/auth.guard';
     MailModule,
     OtpModule,
     PassportModule,
+    MailQueueModule
   ],
   controllers: [AuthController],
   providers: [
