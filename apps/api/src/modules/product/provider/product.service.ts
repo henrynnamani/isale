@@ -79,6 +79,7 @@ export class ProductService {
       });
     }
 
+
     if (brandId) {
       query.andWhere('brand.id = :brandId', { brandId });
     }
@@ -124,7 +125,7 @@ export class ProductService {
     const result = await this.paginationService.cursorPaginate(
       query,
       paginationDto,
-      ['colors', 'rams', 'roms'],
+      [],
     );
 
     return {

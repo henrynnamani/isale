@@ -1,7 +1,7 @@
 'use client';
 
 import { BadgeCheck, Star } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import {
   Breadcrumb,
@@ -28,6 +28,9 @@ import { cn } from '@/components/lib/utils';
 import ProductCarousel from '@/components/product/product-carousel';
 import useProduct from '@/store/product';
 import { useRouter } from 'next/navigation';
+import useSWR from 'swr';
+import axios from 'axios';
+import { axiosInstance } from '@/app/layout';
 
 const images = [
   'https://i.pinimg.com/736x/af/da/f0/afdaf06687561353091785825a3a7e78.jpg',
@@ -117,6 +120,29 @@ const page = () => {
   const [selectedImage, setSelectedImage] = useState(images[0]);
   const router = useRouter();
   const saveProductDetail = useProduct((state) => state.saveProductDetail);
+  const [isLoading, setIsLoading] = useState(false);
+  const [similarProducts, setSimilarProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchSimilarProduct = async () => {
+      setIsLoading(true);
+      await axiosInstance
+        .get(
+          `products/filter?name=${product.name}&condition=${product.condition}`,
+        )
+        .then((data) => {
+          const products = data?.data?.data?.products.filter(
+            (prod) => prod.id != product.id,
+          );
+          setSimilarProducts(products);
+          setIsLoading(false);
+        });
+    };
+
+    fetchSimilarProduct();
+  }, [product]);
+
+  console.log('😅', similarProducts);
 
   const checkoutPage = (product: any) => {
     saveProductDetail(product);
@@ -149,7 +175,7 @@ const page = () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>{product?.product?.name}</BreadcrumbPage>
+            <BreadcrumbPage>{product?.name}</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -182,16 +208,16 @@ const page = () => {
         <div className="flex flex-col gap-4 flex-1">
           <div className="gap-3 flex flex-col">
             <span className="font-semibold md:text-xl text-lg">
-              {product?.product?.name}
+              {product?.name}
             </span>
             <div className="flex gap-5 items-center">
-              <span className="text-sm">@{product?.product?.vendor?.name}</span>
-              {product?.product?.vendor?.isVerified && (
+              <span className="text-sm">@{product?.vendor?.name}</span>
+              {product?.vendor?.isVerified && (
                 <BadgeCheck size={18} color="blue" />
               )}
             </div>
             <span className="font-bold md:text-2xl text-lg">
-              N{parseInt(product?.product?.price).toLocaleString()}
+              N{parseInt(product?.price).toLocaleString()}
             </span>
           </div>
           <hr />
@@ -202,30 +228,30 @@ const page = () => {
               </span>
               :{' '}
               <span className="text-sm border p-2 rounded-full">
-                {product?.product?.condition}
+                {product?.condition}
               </span>
             </div>
             <div>
               <span className="text-sm font-medium text-gray-600">RAM</span>:{' '}
               <span className="text-sm border p-2 rounded-full">
-                {product?.product?.rams[0].size}gb
+                {product?.rams[0].size}gb
               </span>
             </div>
           </div>
           <div className="flex gap-5 mt-3 items-center">
             <div>
               <span className="text-sm font-medium text-gray-600 rounded-full border p-2">
-                {product?.product?.trueTone ? '✅' : '🚫'} True Tone
+                {product?.trueTone ? '✅' : '🚫'} True Tone
               </span>
             </div>
             <div>
               <span className="text-sm font-medium text-gray-600 rounded-full border p-2">
-                {product?.product?.trueTone ? '✅' : '🚫'} Face ID
+                {product?.trueTone ? '✅' : '🚫'} Face ID
               </span>
             </div>
             <div
               className={`p-3 border rounded-full`}
-              style={{ backgroundColor: `#${product?.product?.colors[0].hex}` }}
+              style={{ backgroundColor: `#${product?.colors[0].hex}` }}
             ></div>
           </div>
           <Accordion
@@ -238,13 +264,13 @@ const page = () => {
               <AccordionTrigger>Product Information</AccordionTrigger>
               <AccordionContent className="flex flex-col gap-4 text-balance">
                 <ul className="list-disc pl-5">
-                  {Object.entries(
-                    JSON.parse(product?.product?.specification),
-                  ).map(([key, value]) => (
-                    <li
-                      key={key}
-                    >{`${key.charAt(0).toUpperCase() + key.slice(1)}: ${value}`}</li>
-                  ))}
+                  {Object.entries(JSON.parse(product?.specification)).map(
+                    ([key, value]) => (
+                      <li
+                        key={key}
+                      >{`${key.charAt(0).toUpperCase() + key.slice(1)}: ${value}`}</li>
+                    ),
+                  )}
                 </ul>
               </AccordionContent>
             </AccordionItem>
@@ -282,11 +308,11 @@ const page = () => {
           <div className="flex items-center gap-3">
             <div
               onClick={() => checkoutPage(product)}
-              className="rounded-full cursor-pointer flex-1 md:px-8 md:py-2 px-8 py-4 bg-black text-white font-bold text-center text-sm md:text-lg"
+              className="rounded-full cursor-pointer flex-1 md:px-8 md:py-2 px-8 py-4 bg-black text-white font-bold text-center text-sm md:text-sm"
             >
               BUY NOW
             </div>
-            <div className="rounded-full cursor-pointer flex-1 border md:px-8 md:py-2 px-8 py-4 text-center font-semibold border-gray-500 text-sm md:text-lg">
+            <div className="rounded-full cursor-pointer flex-1 border md:px-8 md:py-2 px-8 py-4 text-center font-semibold border-gray-500 text-sm md:text-sm">
               ADD TO CART
             </div>
           </div>
@@ -342,7 +368,9 @@ const page = () => {
       {/** Similar Product */}
       <div className="space-y-5 flex flex-col">
         <span className="font-semibold text-lg">Similar Product</span>
-        <ProductCarousel />
+        {similarProducts?.length == 0 ? <div>No products</div> : (
+          <ProductCarousel isLoading={isLoading} products={similarProducts} />
+        )}
       </div>
     </div>
   );

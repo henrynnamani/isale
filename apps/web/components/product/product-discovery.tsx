@@ -5,15 +5,7 @@ import ProductCard from './product-card';
 import useSWR from 'swr';
 import { SkeletonCard } from '../Skeleton-card';
 
-const ProductDiscovery = () => {
-  const [cursor, setCursor] = useState(null);
-
-  const { data, error } = useSWR(
-    cursor ? `/products?cursor=${cursor}&limit=20` : `/products?limit=20`,
-  );
-
-  const isLoading = !data && !error;
-
+const ProductDiscovery = ({ isLoading, products }: any) => {
   return (
     <div className="flex flex-col gap-5">
       <div>
@@ -27,7 +19,7 @@ const ProductDiscovery = () => {
                 <SkeletonCard />
               </div>
             ))
-          : data?.data?.products?.map((product) => (
+          : products?.map((product) => (
               <div key={product.id} className="w-full max-w-[250px]">
                 <ProductCard product={product} />
               </div>
