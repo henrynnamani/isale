@@ -48,6 +48,8 @@ export class OrderService {
           id: item.productId,
         });
 
+        product.available = false;
+
         const priceAtPurchase = product.price;
         const orderItem = this.orderItemRepository.create({
           product,
@@ -57,6 +59,8 @@ export class OrderService {
 
         total += item.quantity * priceAtPurchase;
         orderItems.push(orderItem);
+
+        this.productRepository.save(product);
       }
 
       const order = this.orderRepository.create({
@@ -105,26 +109,26 @@ export class OrderService {
     }
   }
 
-  async fetchAllOrder(
-    status: DeliveryStatus,
-    fetchOrderParamPaginationDto: PaginationDto,
-  ) {
+  async fetchAllOrder() {
+    const userId = '87db2cbd-1900-4721-bd61-b7bb4cdbc6dd';
     try {
-      const query = this.orderRepository.createQueryBuilder('order');
+      const orders = await this.orderRepository.find({
+        where: { user: { id: userId } },
+      });
 
-      if (status) {
-        query.andWhere('order.delivery_status = :status', {
-          status,
-        });
-      }
+      // if (status) {
+      //   query.andWhere('order.delivery_status = :status', {
+      //     status,
+      //   });
+      // }
 
-      const result = await this.paginationService.paginateQuery(
-        query,
-        fetchOrderParamPaginationDto,
-      );
+      // const result = await this.paginationService.paginateQuery(
+      //   query,
+      //   fetchOrderParamPaginationDto,
+      // );
 
       return {
-        data: result,
+        data: orders,
         message: SYS_MSG.ORDER_LIST_FETCHED,
       };
     } catch (err) {

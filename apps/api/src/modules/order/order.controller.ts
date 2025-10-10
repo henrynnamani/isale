@@ -8,7 +8,9 @@ import {
   UpdateOrderParamDto,
   UpdateOrderStatusDto,
 } from './dto/update-order.dto';
+import { skipAuth } from '@/shared/decorators';
 
+@skipAuth()
 @Controller('orders')
 @ApiTags('order')
 export class OrderController {
@@ -22,12 +24,8 @@ export class OrderController {
 
   @Get()
   @CreateGetDoc('Fetch all orders', FilterOrderDto)
-  fetchAllOrder(@Query() filterOrderDto: FilterOrderDto) {
-    const { limit, page, status } = filterOrderDto;
-    return this.orderService.fetchAllOrder(status, {
-      limit,
-      page,
-    });
+  fetchAllOrder() {
+    return this.orderService.fetchAllOrder();
   }
 
   @Get(':id')

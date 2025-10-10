@@ -7,23 +7,7 @@ import Stepper from '@keyvaluesystems/react-stepper';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import StarRating from '@/components/Star';
-
-const mockOrders = [
-  {
-    id: '1',
-    product: 'iPhone 15 Pro',
-    image:
-      'https://i.pinimg.com/736x/16/53/9c/16539c3ad34be66f593eb6ade38be749.jpg',
-    price: '₦1,200,000',
-    status: 'pending',
-    date: '2025-09-01',
-    location: 'Lagos',
-    history: [
-      { status: 'ordered', date: '2025-09-01' },
-      { status: 'packed', date: '2025-09-02' },
-    ],
-  },
-];
+import useOrder from '@/store/order';
 
 const styles = {
   LineSeparator: () => ({
@@ -39,7 +23,7 @@ const styles = {
 
 const statusColor: Record<string, string> = {
   pending: 'bg-yellow-100 text-yellow-800',
-  'on-delivery': 'bg-blue-100 text-blue-800',
+  'on delivery': 'bg-blue-100 text-blue-800',
   completed: 'bg-green-100 text-green-800',
 };
 
@@ -50,9 +34,15 @@ const formatDate = (dateString: string) =>
     year: 'numeric',
   });
 
+const currentStepIndex = (status) => {
+  return status == 'pending' ? 1 : status == 'on delivery' ? 2 : 3;
+};
+
 const OrderDetailPage = () => {
   const { id } = useParams();
-  const order = mockOrders.find((order) => order.id === '1');
+  const order = useOrder((state) => state.orderDetail);
+
+  console.log(order);
 
   if (!order) {
     return <div className="p-8 text-center text-red-500">Order not found.</div>;
@@ -72,24 +62,24 @@ const OrderDetailPage = () => {
       <div className="flex gap-6 bg-white shadow-sm rounded-lg p-4 mb-6 border flex-col md:flex-row">
         <div className="flex flex-1 gap-3 h-40 md:flex-row flex-col">
           <img
-            src={order.image}
-            alt={order.product}
-            // width={80}
-            // height={80}
+            src={order?.items[0].product.images[0]}
+            alt={'order product'}
             className="rounded-md object-cover border w-full md:w-52 md:h-36 h-44"
           />
           <div className="flex flex-col gap-1">
-            <h1 className="text-xl font-semibold">{order.product}</h1>
+            <h1 className="text-xl font-semibold">
+              {order?.items[0].product.name}
+            </h1>
             <div className="text-muted-foreground flex gap-2 items-center">
               <span>@Vintech</span>
               <Verified size={18} />
             </div>
-            <p className="text-muted-foreground">{order.price}</p>
+            <p className="text-muted-foreground">{order?.totalAmount}</p>
           </div>
         </div>
         <div className="h-fit w-fit">
-          <Badge className={`mt-2 w-fit ${statusColor[order.status]}`}>
-            {order.status.toUpperCase()}
+          <Badge className={`mt-2 w-fit ${statusColor[order.delivery_status]}`}>
+            {order?.delivery_status.toUpperCase()}
           </Badge>
         </div>
       </div>
@@ -100,11 +90,11 @@ const OrderDetailPage = () => {
           <span className="font-medium">Order ID:</span> #{order.id}
         </p>
         <p>
-          <span className="font-medium">Location:</span> {order.location}
+          {/* <span className="font-medium">Location:</span> {order.location} */}
         </p>
         <p>
           <span className="font-medium">Ordered on:</span>{' '}
-          {formatDate(order.date)}
+          {formatDate(order.updatedAt)}
         </p>
       </div>
 
@@ -131,7 +121,7 @@ const OrderDetailPage = () => {
               completed: true,
             },
           ]}
-          currentStepIndex={1}
+          currentStepIndex={currentStepIndex(order.delivery_status)}
         />
       </div>
 

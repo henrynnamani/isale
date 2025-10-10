@@ -9,8 +9,8 @@ const ProductCard = (product: any) => {
   const saveProductDetail = useProduct((state: any) => state.saveProductDetail);
 
   const viewProduct = (product: any) => {
-    saveProductDetail(product);
-    router.push(`/product/${product.id}`);
+    saveProductDetail(product?.product);
+    router.push(`/product/${product.product.slug}`);
   };
 
   return (

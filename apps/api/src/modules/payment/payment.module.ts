@@ -6,9 +6,10 @@ import { Payment } from './model/payment.entity';
 import { PaystackProvider } from './providers/paystack.provider';
 import { OrderModule } from '../order/order.module';
 import { NowPaymentProvider } from './providers/now-payment.provider';
+import { TelegramModule } from '../telegram/telegram.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Payment]), OrderModule],
+  imports: [TypeOrmModule.forFeature([Payment]), OrderModule, TelegramModule],
   controllers: [PaymentController],
   providers: [
     PaymentService,

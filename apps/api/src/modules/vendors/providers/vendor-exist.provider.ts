@@ -15,7 +15,7 @@ export class VendorExistProvider {
       const vendor = await this.vendorRepository.findBy({
         telegramChatId: chatId,
       });
-      return vendor;
+      return vendor[0];
     } catch (err) {
       throw new RequestTimeoutException(err, {
         description: SYS_MSG.DB_CONNECTION_ERROR,

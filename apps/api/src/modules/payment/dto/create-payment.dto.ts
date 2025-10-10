@@ -4,9 +4,9 @@ import {
   IsEnum,
   IsNotEmpty,
   IsNumber,
+  IsObject,
   IsString,
 } from 'class-validator';
-
 
 export class CreatePaymentDto {
   @ApiProperty({
@@ -24,6 +24,14 @@ export class CreatePaymentDto {
   @IsString()
   @IsNotEmpty()
   orderId: string;
+
+  @ApiProperty({
+    example: '',
+    description: 'order ID',
+  })
+  @IsObject()
+  @IsNotEmpty()
+  billingDetail: {};
 
   @ApiProperty({
     example: 'hoyx0101@gmail.com',

@@ -10,6 +10,7 @@ import { Payment } from '../model/payment.entity';
 import { Repository } from 'typeorm';
 import { PaymentMethod } from '@/shared/enum/payment.enum';
 import { PaymentStatus } from '@/shared/enum/order.enum';
+import { TelegramService } from '@/modules/telegram/provider/telegram.service';
 
 interface PaystackResponse {
   status: boolean;
@@ -28,18 +29,21 @@ export class PaystackProvider implements PaymentProvider {
     private readonly orderExistProvider: OrderExistProvider,
     @InjectRepository(Payment)
     private readonly paymentRepository: Repository<Payment>,
+    private readonly telegramBotService: TelegramService,
   ) {}
   async createPayment(data: CreatePaymentDto): Promise<PaymentResponseDto> {
     const paymentUrl = `${this.configService.get<string>('payment.paystackBaseUrl')}/transaction/initialize`;
+
     try {
       const response: PaystackResponse = await axios
         .post(
           paymentUrl,
           {
             email: data.email,
-            amount: data.amount * 100,
+            amount: data.amount,
             metadata: {
               orderId: data.orderId,
+              billingDetail: data?.billingDetail,
             },
           },
           {
@@ -67,8 +71,24 @@ export class PaystackProvider implements PaymentProvider {
     const event = payload.event;
     const orderId = payload.data.metadata.orderId;
     const order = await this.orderExistProvider.checkOrderExist(orderId);
+    const billingDetail = payload.data.metadata.billingDetail;
 
-    console.log(payload);
+    const telegramPayload = {
+      productName: order.items[0].product.name,
+      quantity: 1,
+      totalAmount: order.total_amount.toLocaleString(),
+      customerName: billingDetail.full_name,
+      phoneNumber: billingDetail.phone_number,
+      orderId: orderId,
+    };
+
+    await this.telegramBotService.notifyVendorOfOrder(
+      order.vendor.telegramChatId,
+      order.items[0].product.images[0],
+      telegramPayload,
+    );
+
+    console.log(payload.data.metadata.billingDetail);
 
     if (event === 'charge.success' || event === 'charge.failed') {
       const status =

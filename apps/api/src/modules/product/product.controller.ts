@@ -20,6 +20,7 @@ import { DeleteProductParamDto } from './dto/delete-param.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { skipAuth } from '@/shared/decorators';
 
+@skipAuth()
 @ApiTags('products')
 @Controller('products')
 export class ProductController {
@@ -31,18 +32,10 @@ export class ProductController {
     return this.productService.createProduct(createProductDto);
   }
 
-  @skipAuth()
   @CreateGetDoc('Fetch all product', CursorPaginationDto)
   @Get('')
   allProducts(@Query() paginationDto: CursorPaginationDto) {
     return this.productService.getProducts(paginationDto);
-  }
-
-  @Get(':id')
-  @CreateGetDoc('Fetch product detail', ProductDetailDto)
-  @ApiParam({ name: 'id', type: String, description: 'Product ID' })
-  productDetail(@Param() productQueryDto: ProductDetailDto) {
-    return this.productService.productDetail(productQueryDto);
   }
 
   @FilterProductDoc()
@@ -52,6 +45,13 @@ export class ProductController {
       cursor: filterProductDto.cursor,
       limit: filterProductDto.limit,
     });
+  }
+
+  @Get(':id')
+  @CreateGetDoc('Fetch product detail', ProductDetailDto)
+  @ApiParam({ name: 'id', type: String, description: 'Product ID' })
+  productDetail(@Param() productQueryDto: ProductDetailDto) {
+    return this.productService.productDetail(productQueryDto);
   }
 
   @Delete(':id')
