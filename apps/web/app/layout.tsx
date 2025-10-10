@@ -4,6 +4,7 @@ import { PropsWithChildren } from 'react';
 import { Inter } from 'next/font/google';
 import { SWRConfig } from 'swr';
 import axios from 'axios';
+import { Toaster } from '@/components/ui/sonner';
 
 import './globals.css';
 const inter = Inter({ subsets: ['latin'] });
@@ -42,7 +43,11 @@ export default function RootLayout({ children }: Readonly<PropsWithChildren>) {
           fetcher: fetcher,
         }}
       >
-        <body className={inter.className}>{children}</body>
+        
+        <body className={inter.className}>
+          {children}
+          <Toaster />
+        </body>
       </SWRConfig>
     </html>
   );

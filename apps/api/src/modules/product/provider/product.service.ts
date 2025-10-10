@@ -1,6 +1,6 @@
 import { Injectable, RequestTimeoutException } from '@nestjs/common';
 import { CreateProductDto } from '../dto/create-product.dto';
-import { MoreThan, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Product } from '../model/product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SaveProductProvider } from '../providers/save-product.provider';
@@ -15,6 +15,7 @@ import { UpdateProductDto } from '../dto/update-product.dto';
 import { Color } from '@/modules/color/model/color.entity';
 import { Ram } from '@/modules/ram/model/ram.entity';
 import { Rom } from '@/modules/rom/model/rom.entity';
+
 @Injectable()
 export class ProductService {
   constructor(
@@ -42,8 +43,12 @@ export class ProductService {
       ['roms', 'rams', 'colors', 'vendor'],
     );
 
+    const products = result?.products?.filter(
+      (product) => product.available === true,
+    );
+
     return {
-      data: result,
+      data: products,
       message: SYS_MSG.PRODUCT_LIST,
     };
   }
@@ -78,7 +83,6 @@ export class ProductService {
         name: `%${name.toLowerCase()}%`,
       });
     }
-
 
     if (brandId) {
       query.andWhere('brand.id = :brandId', { brandId });
@@ -183,9 +187,9 @@ export class ProductService {
       product.condition = updateProductDto.condition
         ? updateProductDto.condition
         : product.condition;
-      product.specification = updateProductDto.specification
-        ? JSON.parse(updateProductDto.specification)
-        : product.specification;
+      // product.specification = updateProductDto.specification
+      //   ? JSON.parse(updateProductDto.specification)
+      //   : product.specification;
       product.images = updateProductDto.images
         ? updateProductDto.images
         : product.images;
@@ -195,6 +199,9 @@ export class ProductService {
       product.name = updateProductDto.name
         ? updateProductDto.name
         : product.name;
+      product.available = updateProductDto.available
+        ? updateProductDto.available
+        : product.available;
       product.colors =
         updateProductDto.colors &&
         (updateProductDto.colors as unknown as Color[]);

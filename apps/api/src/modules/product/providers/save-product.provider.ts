@@ -42,8 +42,8 @@ export class SaveProductProvider {
 
     const roms = await this.romExist.getRomEntities(createProductDto.roms);
 
-    const vendor = await this.vendorExist.checkVendorExistById(
-      createProductDto.vendorId,
+    const vendor = await this.vendorExist.checkVendorExistByChatId(
+      createProductDto.chatId,
     );
 
     const payload = {
@@ -57,9 +57,9 @@ export class SaveProductProvider {
       name: createProductDto.name,
       price: createProductDto.price,
       vendor,
-      specification:
-        createProductDto.specification ??
-        JSON.parse(createProductDto.specification),
+      // specification:
+      //   createProductDto.specification ??
+      //   JSON.parse(createProductDto.specification),
     };
 
     try {

@@ -9,6 +9,6 @@ import { RamExistProvider } from './providers/ram-exist.provider';
   imports: [TypeOrmModule.forFeature([Ram])],
   controllers: [RamController],
   providers: [RamService, RamExistProvider],
-  exports: [RamExistProvider],
+  exports: [RamExistProvider, RamService],
 })
 export class RamModule {}

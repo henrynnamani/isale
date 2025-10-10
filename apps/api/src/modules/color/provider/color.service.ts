@@ -67,4 +67,16 @@ export class ColorService {
       });
     }
   }
+
+  async getAllColor() {
+    try {
+      const colors = await this.colorRepository.find();
+
+      return colors;
+    } catch (err) {
+      throw new RequestTimeoutException(err, {
+        description: SYS_MSG.DB_CONNECTION_ERROR,
+      });
+    }
+  }
 }

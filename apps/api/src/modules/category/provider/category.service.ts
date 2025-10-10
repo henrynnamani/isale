@@ -19,13 +19,9 @@ export class CategoryService {
   ) {}
 
   async addCategory(addCategoryDto: AddCategoryDto) {
-    const category = await this.categoryExistProvider.checkCategoryExist({
+    await this.categoryExistProvider.checkCategoryDoesNotExist({
       name: addCategoryDto.name,
     });
-
-    if (category) {
-      throw new BadRequestException(SYS_MSG.CATEGORY_ALREADY_EXIST);
-    }
 
     try {
       const newCategory = this.categoryRepository.create(addCategoryDto);
@@ -36,6 +32,18 @@ export class CategoryService {
         data: newCategory,
         message: SYS_MSG.CATEGORY_SUCCESSFULLY_CREATED,
       };
+    } catch (err) {
+      throw new RequestTimeoutException(err, {
+        description: SYS_MSG.DB_CONNECTION_ERROR,
+      });
+    }
+  }
+
+  async getAllCategory() {
+    try {
+      const categories = await this.categoryRepository.find();
+
+      return categories;
     } catch (err) {
       throw new RequestTimeoutException(err, {
         description: SYS_MSG.DB_CONNECTION_ERROR,

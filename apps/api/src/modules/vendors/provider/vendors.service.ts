@@ -12,6 +12,7 @@ import * as SYS_MSG from '@/shared/system-message';
 import { CreateVendor } from '@/types';
 import { ProductService } from '@/modules/product/provider/product.service';
 import { CursorPaginationDto } from '@/shared/pagination/pagination.dto';
+import { PaginationService } from '@/shared/pagination/pagination.service';
 
 @Injectable()
 export class VendorsService {
@@ -28,7 +29,7 @@ export class VendorsService {
       createVendorDto.telegramChatId,
     );
 
-    if (vendorExist?.length > 0) {
+    if (vendorExist) {
       throw new BadRequestException(SYS_MSG.VENDOR_EXISTS);
     }
 
@@ -105,5 +106,15 @@ export class VendorsService {
     return this.productService.fetchVendorProduct(id, paginationDto);
   }
 
-  // async changeVendorBankAccount() {}
+  async getAllVendor() {
+    try {
+      const vendors = await this.vendorRepository.find({});
+
+      return vendors;
+    } catch (err) {
+      throw new RequestTimeoutException(err, {
+        description: SYS_MSG.DB_CONNECTION_ERROR,
+      });
+    }
+  }
 }

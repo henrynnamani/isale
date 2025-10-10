@@ -17,6 +17,24 @@ export class CategoryExistProvider {
     private readonly categoryRepository: Repository<Category>,
   ) {}
 
+  async checkCategoryDoesNotExist(query: optionalQuery) {
+    try {
+      const category = await this.categoryRepository.findOne({
+        where: query,
+      });
+
+      if (category) {
+        throw new NotFoundException(SYS_MSG.CATEGORY_ALREADY_EXIST);
+      }
+
+      return category;
+    } catch (err) {
+      throw new RequestTimeoutException(err, {
+        description: SYS_MSG.DB_CONNECTION_ERROR,
+      });
+    }
+  }
+
   async checkCategoryExist(query: optionalQuery) {
     try {
       const category = await this.categoryRepository.findOne({

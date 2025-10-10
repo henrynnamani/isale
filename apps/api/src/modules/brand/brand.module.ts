@@ -9,6 +9,6 @@ import { BrandExistProvider } from './providers/brand-exist.provider';
   imports: [TypeOrmModule.forFeature([Brand])],
   controllers: [BrandController],
   providers: [BrandService, BrandExistProvider],
-  exports: [BrandExistProvider],
+  exports: [BrandExistProvider, BrandService],
 })
 export class BrandModule {}

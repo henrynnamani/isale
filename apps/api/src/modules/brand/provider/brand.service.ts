@@ -56,6 +56,18 @@ export class BrandService {
       });
     }
   }
+
+  async getAllBrand() {
+    try {
+      const brands = await this.brandRepository.find();
+
+      return brands;
+    } catch (err) {
+      throw new RequestTimeoutException(err, {
+        description: SYS_MSG.DB_CONNECTION_ERROR,
+      });
+    }
+  }
 }
 
 /**

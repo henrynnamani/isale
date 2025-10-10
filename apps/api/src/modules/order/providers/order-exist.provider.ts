@@ -17,7 +17,10 @@ export class OrderExistProvider {
 
   async checkOrderExist(id: string) {
     try {
-      const order = await this.orderRepository.findOneOrFail({ where: { id } });
+      const order = await this.orderRepository.findOneOrFail({
+        where: { id },
+        relations: ['vendor', 'user'],
+      });
 
       if (!order) {
         throw new NotFoundException(SYS_MSG.ORDER_NOT_FOUND);

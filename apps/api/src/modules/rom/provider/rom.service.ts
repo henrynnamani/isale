@@ -39,4 +39,16 @@ export class RomService {
       });
     }
   }
+
+  async getAllRom() {
+    try {
+      const roms = await this.romRepository.find();
+
+      return roms;
+    } catch (err) {
+      throw new RequestTimeoutException(err, {
+        description: SYS_MSG.DB_CONNECTION_ERROR,
+      });
+    }
+  }
 }

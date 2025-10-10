@@ -19,6 +19,12 @@ export class VendorsController {
     return this.vendorsService.activateVendor(vendorId);
   }
 
+  @CreateGetDoc('Get all vendors', CreateVendorDto)
+  @Get('')
+  getVendors() {
+    return this.vendorsService.getAllVendor();
+  }
+
   @deactivateVendor()
   @Patch(':id/deactivate')
   deactivateVendor(@Param('id') vendorId: string) {

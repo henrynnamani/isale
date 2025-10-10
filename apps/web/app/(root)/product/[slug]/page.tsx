@@ -23,20 +23,12 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import Image from 'next/image';
-import { Marquee } from '@/components/magicui/marquee';
 import { cn } from '@/components/lib/utils';
 import ProductCarousel from '@/components/product/product-carousel';
 import useProduct from '@/store/product';
 import { useRouter } from 'next/navigation';
-import useSWR from 'swr';
-import axios from 'axios';
 import { axiosInstance } from '@/app/layout';
-
-const images = [
-  'https://i.pinimg.com/736x/af/da/f0/afdaf06687561353091785825a3a7e78.jpg',
-  'https://i.pinimg.com/736x/35/00/70/3500706066b664e9db01c51d4bf92261.jpg',
-  'https://i.pinimg.com/736x/c4/fc/82/c4fc82b6f8e10d16447e0548fd122202.jpg',
-];
+import useCheckout from '@/store/checkout';
 
 const reviews = [
   {
@@ -117,9 +109,11 @@ const ReviewCard = ({
 
 const page = () => {
   const product = useProduct((state) => state.product);
-  const [selectedImage, setSelectedImage] = useState(images[0]);
+  const [selectedImage, setSelectedImage] = useState(null);
   const router = useRouter();
-  const saveProductDetail = useProduct((state) => state.saveProductDetail);
+  const saveCheckoutProducts = useCheckout(
+    (state) => state.saveCheckoutProducts,
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [similarProducts, setSimilarProducts] = useState([]);
 
@@ -142,10 +136,8 @@ const page = () => {
     fetchSimilarProduct();
   }, [product]);
 
-  console.log('😅', similarProducts);
-
   const checkoutPage = (product: any) => {
-    saveProductDetail(product);
+    saveCheckoutProducts([product]);
     router.push(`/checkout`);
   };
 
@@ -184,7 +176,7 @@ const page = () => {
         <div className="flex-1 flex flex-col">
           <div className="w-full">
             <Image
-              src={product?.product?.images[0]}
+              src={selectedImage ?? product?.images[0]}
               alt="Product detail"
               className="w-full h-[400px] object-cover rounded-sm"
               width={1920}
@@ -192,7 +184,7 @@ const page = () => {
             />
           </div>
           <div className={`flex gap-4 mt-4`}>
-            {product?.product?.images?.map((image) => (
+            {product?.images?.map((image) => (
               <img
                 src={image}
                 alt={`image-${1283}`}
@@ -234,7 +226,7 @@ const page = () => {
             <div>
               <span className="text-sm font-medium text-gray-600">RAM</span>:{' '}
               <span className="text-sm border p-2 rounded-full">
-                {product?.rams[0].size}gb
+                {product?.rams[0]?.size}gb
               </span>
             </div>
           </div>
@@ -262,7 +254,7 @@ const page = () => {
           >
             <AccordionItem value="item-1">
               <AccordionTrigger>Product Information</AccordionTrigger>
-              <AccordionContent className="flex flex-col gap-4 text-balance">
+              {/* <AccordionContent className="flex flex-col gap-4 text-balance">
                 <ul className="list-disc pl-5">
                   {Object.entries(JSON.parse(product?.specification)).map(
                     ([key, value]) => (
@@ -272,7 +264,7 @@ const page = () => {
                     ),
                   )}
                 </ul>
-              </AccordionContent>
+              </AccordionContent> */}
             </AccordionItem>
             <AccordionItem value="item-2">
               <AccordionTrigger>Shipping Details</AccordionTrigger>
@@ -312,9 +304,12 @@ const page = () => {
             >
               BUY NOW
             </div>
-            <div className="rounded-full cursor-pointer flex-1 border md:px-8 md:py-2 px-8 py-4 text-center font-semibold border-gray-500 text-sm md:text-sm">
+            {/* <div
+              onClick={() => {}}
+              className="rounded-full cursor-pointer flex-1 border md:px-8 md:py-2 px-8 py-4 text-center font-semibold border-gray-500 text-sm md:text-sm"
+            >
               ADD TO CART
-            </div>
+            </div> */}
           </div>
           <hr />
           <div>
@@ -324,7 +319,7 @@ const page = () => {
         </div>
       </div>
 
-      <div>
+      {/* <div>
         <span className="text-lg font-medium">Ratings and Reviews</span>
         <div className="flex items-center space-x-8 justify-between">
           <div className="flex flex-col gap-2">
@@ -363,12 +358,14 @@ const page = () => {
             <div className="pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l from-background"></div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/** Similar Product */}
       <div className="space-y-5 flex flex-col">
         <span className="font-semibold text-lg">Similar Product</span>
-        {similarProducts?.length == 0 ? <div>No products</div> : (
+        {similarProducts?.length == 0 ? (
+          <div>No products</div>
+        ) : (
           <ProductCarousel isLoading={isLoading} products={similarProducts} />
         )}
       </div>

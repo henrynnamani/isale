@@ -11,7 +11,7 @@ const page = () => {
   const { data, error } = useSWR(`/products?limit=20`);
 
   useEffect(() => {
-    const products = data?.data?.products.filter(
+    const products = data?.data?.filter(
       (product) => product.onDiscount !== false,
     );
 
@@ -30,7 +30,7 @@ const page = () => {
       />
       <ProductDiscovery
         isLoading={isLoading}
-        products={data && data?.data?.products}
+        products={data && data?.data}
       />
     </div>
   );

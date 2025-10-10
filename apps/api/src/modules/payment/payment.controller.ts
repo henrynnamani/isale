@@ -4,7 +4,9 @@ import { CreatePaymentDto } from './dto/create-payment.dto';
 import { CreateDoc } from '@/shared/doc-response';
 import { ApiTags } from '@nestjs/swagger';
 import { NowPaymentDto } from './providers/now-payment.provider';
+import { skipAuth } from '@/shared/decorators';
 
+@skipAuth()
 @ApiTags('payment')
 @Controller('payments')
 export class PaymentController {
