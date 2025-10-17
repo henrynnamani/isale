@@ -5,8 +5,10 @@ import { Inter } from 'next/font/google';
 import { SWRConfig } from 'swr';
 import axios from 'axios';
 import { Toaster } from '@/components/ui/sonner';
+import { parseCookies } from 'nookies';
 
 import './globals.css';
+import { parseCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 const inter = Inter({ subsets: ['latin'] });
 
 // export const metadata: Metadata = {
@@ -24,6 +26,18 @@ export const axiosInstance = axios.create({
   },
   timeout: 10000,
 });
+
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const token = parseCookies().accessToken;
+    if (token) {
+      config.headers = config.headers || {};
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error),
+);
 
 const fetcher = async (url: string, config?: object) => {
   try {
@@ -43,7 +57,6 @@ export default function RootLayout({ children }: Readonly<PropsWithChildren>) {
           fetcher: fetcher,
         }}
       >
-        
         <body className={inter.className}>
           {children}
           <Toaster />

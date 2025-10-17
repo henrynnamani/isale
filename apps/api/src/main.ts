@@ -5,6 +5,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { APP_NAME } from './constant';
 import { LoggingInterceptor } from './shared/interceptor/request-log.interceptor';
 import cookieParser from 'cookie-parser';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -25,6 +26,7 @@ async function bootstrap() {
   });
 
   app.useGlobalInterceptors(new LoggingInterceptor());
+
 
   const config = new DocumentBuilder()
     .addBearerAuth()

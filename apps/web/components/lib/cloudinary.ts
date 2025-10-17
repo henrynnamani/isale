@@ -4,6 +4,8 @@ export async function uploadImagesToCloudinary(
   const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME!;
   const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!;
 
+  console.log(uploadPreset);
+
   const uploadPromises = files.map(async (file) => {
     const formData = new FormData();
     formData.append('file', file);

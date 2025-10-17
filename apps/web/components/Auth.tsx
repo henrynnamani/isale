@@ -8,15 +8,16 @@ const Auth = () => {
   const router = useRouter();
   const cookies = parseCookies();
 
-  console.log(cookies);
-
   useEffect(() => {
     api.defaults.headers['authorization'] = `Bearer ${cookies.accessToken}`;
-  }, [cookies]);
+  }, []);
 
   return cookies?.accessToken ? (
-    <div onClick={() => router.push('/cart')} className="flex gap-2 items-center">
-      <ShoppingBag size={20}/>
+    <div
+      onClick={() => router.push('/cart')}
+      className="flex gap-2 items-center"
+    >
+      <ShoppingBag size={20} />
       <p className="font-medium">Cart</p>
     </div>
   ) : (

@@ -1,12 +1,11 @@
 'use client';
 
-import * as React from 'react';
+import { ChangeEvent, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import useSWR from 'swr';
+import { axiosInstance } from '@/app/layout';
 import {
   Form,
   FormControl,
@@ -15,17 +14,17 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Select,
-  SelectContent,
-  SelectItem,
   SelectTrigger,
   SelectValue,
+  SelectContent,
+  SelectItem,
 } from '@/components/ui/select';
-import axios from 'axios';
 import { Switch } from '../ui/switch';
-import { uploadImagesToCloudinary } from '../lib/cloudinary';
-import useSWR from 'swr';
+import { Button } from '@/components/ui/button';
 
 const productSchema = z.object({
   name: z.string().min(1),
@@ -33,16 +32,15 @@ const productSchema = z.object({
   faceIdAvailable: z.boolean().default(false),
   trueToneAvailable: z.boolean().default(false),
   specification: z.string().optional(),
-  images: z.array(z.url()).min(1),
-  categoryId: z.uuid(),
-  colors: z.array(z.string()).min(1),
-  brandId: z.uuid(),
-  stock: z.number().int().min(0),
-  rams: z.array(z.string()).min(1),
-  roms: z.array(z.string()).min(1),
+  images: z.array(z.string()).min(1), // we'll replace with URLs after upload
+  categoryId: z.string().min(1),
+  colors: z.string(),
+  brandId: z.string().min(1),
+  rams: z.string(),
+  roms: z.string(),
   condition: z.enum(['Refurbished', 'Fairly used']),
-  batteryHealth: z.number().min(0).max(100).optional(),
-  price: z.number().min(1),
+  batteryHealth: z.string(),
+  price: z.string().min(1),
 });
 
 type ProductFormValues = z.infer<typeof productSchema>;
@@ -54,60 +52,81 @@ export function AddProductForm() {
   const { data: rams } = useSWR('/rams');
   const { data: roms } = useSWR('/roms');
 
-  console.log(categories)
+  const [files, setFiles] = useState<File[]>([]);
+  const [previewImages, setPreviewImages] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
     defaultValues: {
+      name: '',
       available: true,
-      images: [],
-      colors: [],
-      rams: [],
-      roms: [],
+      faceIdAvailable: false,
+      trueToneAvailable: false,
+      specification: '',
+      images: [], // placeholder, will override
+      categoryId: '',
+      colors: '',
+      brandId: '',
+      rams: '',
+      roms: '',
+      condition: 'Refurbished',
+      batteryHealth: undefined,
+      price: '',
     },
   });
 
-  const [previewImages, setPreviewImages] = React.useState<string[]>([]);
-  const [loading, setLoading] = React.useState(false);
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files ? Array.from(e.target.files) : [];
-    form.setValue('images', files);
-    const previews = files.map((file) => URL.createObjectURL(file));
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const selected = e.target.files ? Array.from(e.target.files) : [];
+    setFiles(selected);
+    const previews = selected.map((file) => URL.createObjectURL(file));
     setPreviewImages(previews);
   };
-
-  const dummyCategories = [
-    { id: '6a0d5b15-8b26-4e5d-92db-1f1a1aee5a10', name: 'iPhone' },
-    { id: 'ec1e4b9b-5b26-41b2-8e5d-2f2a7f2d8b11', name: 'Samsung' },
-  ];
-
-  const dummyBrands = [
-    { id: '8f1a3b2c-9d2f-45a6-8b0d-1a2c4f3e5b9d', name: 'Apple' },
-    { id: '5d4b1a8c-7e9f-43c1-8a6d-3e7b5c2d9f1a', name: 'Samsung' },
-  ];
 
   const onSubmit = async (values: ProductFormValues) => {
     try {
       setLoading(true);
 
-      console.log(values);
-      // Upload images to Cloudinary
-      //   const imageUrls = await uploadImagesToCloudinary(values.images);
+      // 1. Upload images if you have an upload endpoint
+      const formData = new FormData();
+      files.forEach((file) => {
+        formData.append('images', file);
+      });
 
-      // Send to backend
-      //   const payload = {
-      //     ...values,
-      //     images: imageUrls,
-      //   };
+      const uploadRes = await axiosInstance.post(
+        '/cloudinary/upload',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        },
+      );
 
-      //   await axios.post('https://your-backend-url.com/products', payload);
+      const uploadedUrls: string[] = uploadRes.data.urls;
+      // (adjust according to your backend response)
+
+      // 2. Build the final payload to send to create product
+      const payload = {
+        ...values,
+        images: uploadedUrls,
+        colors: [values.colors],
+        rams: [values.rams],
+        roms: [values.roms],
+        price: Number(values.price),
+      };
+
+      console.log(payload);
+      // 3. Call your backend endpoint to create product
+      const createRes = await axiosInstance.post('/products', payload);
+      console.log('Created product:', createRes.data);
 
       alert('✅ Product created!');
       form.reset();
+      setFiles([]);
       setPreviewImages([]);
     } catch (error) {
-      console.error(error);
+      console.error('Error:', error);
       alert('❌ Error creating product');
     } finally {
       setLoading(false);
@@ -115,9 +134,9 @@ export function AddProductForm() {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-6">
+    <div className="p-6 overflow-auto">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           {/* Name */}
           <FormField
             control={form.control}
@@ -141,22 +160,7 @@ export function AddProductForm() {
               <FormItem>
                 <FormLabel>Price</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="1700000" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* Stock */}
-          <FormField
-            control={form.control}
-            name="stock"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Stock</FormLabel>
-                <FormControl>
-                  <Input type="number" placeholder="10" {...field} />
+                  <Input type="number" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -171,188 +175,185 @@ export function AddProductForm() {
               <FormItem>
                 <FormLabel>Battery Health (%)</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="90" {...field} />
+                  <Input type="number" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          <div className="flex flex-1 justify-between items-center">
-            {/* Category */}
-            <FormField
-              control={form.control}
-              name="categoryId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Category</FormLabel>
+          {/* Category */}
+          <FormField
+            control={form.control}
+            name="categoryId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Category</FormLabel>
+                <FormControl>
                   <Select
                     value={field.value}
                     onValueChange={(value) => field.onChange(value)}
                   >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select category" />
-                      </SelectTrigger>
-                    </FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select category" />
+                    </SelectTrigger>
                     <SelectContent>
-                      {dummyCategories.map((cat) => (
-                        <SelectItem key={cat.id} value={cat.id}>
+                      {categories?.data?.map((cat) => (
+                        <SelectItem key={cat.id} value={String(cat.id)}>
                           {cat.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            {/* Brand */}
-            <FormField
-              control={form.control}
-              name="brandId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Brand</FormLabel>
+          {/* Brand */}
+          <FormField
+            control={form.control}
+            name="brandId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Brand</FormLabel>
+                <FormControl>
                   <Select
                     value={field.value}
                     onValueChange={(value) => field.onChange(value)}
                   >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select brand" />
-                      </SelectTrigger>
-                    </FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select brand" />
+                    </SelectTrigger>
                     <SelectContent>
-                      {dummyBrands.map((brand) => (
-                        <SelectItem key={brand.id} value={brand.id}>
-                          {brand.name}
+                      {brands?.data?.map((b) => (
+                        <SelectItem key={b.id} value={String(b.id)}>
+                          {b.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            {/* Condition */}
-            <FormField
-              control={form.control}
-              name="condition"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Condition</FormLabel>
+          {/* Condition */}
+          <FormField
+            control={form.control}
+            name="condition"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Condition</FormLabel>
+                <FormControl>
                   <Select
                     value={field.value}
                     onValueChange={(value) =>
                       field.onChange(value as ProductFormValues['condition'])
                     }
                   >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select condition" />
-                      </SelectTrigger>
-                    </FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select condition" />
+                    </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="Refurbished">Refurbished</SelectItem>
                       <SelectItem value="Fairly used">Fairly used</SelectItem>
                     </SelectContent>
                   </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-          <div className="flex flex-1 justify-between items-center">
-            {/* Category */}
-            <FormField
-              control={form.control}
-              name="categoryId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Colors</FormLabel>
+          {/* Colors (multi select) */}
+          <FormField
+            control={form.control}
+            name="colors"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Colors</FormLabel>
+                <FormControl>
                   <Select
                     value={field.value}
                     onValueChange={(value) => field.onChange(value)}
                   >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select color" />
-                      </SelectTrigger>
-                    </FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select colors" />
+                    </SelectTrigger>
                     <SelectContent>
-                      {dummyCategories.map((cat) => (
-                        <SelectItem key={cat.id} value={cat.id}>
-                          {cat.name}
+                      {colors?.data?.map((c) => (
+                        <SelectItem key={c.id} value={String(c.id)}>
+                          {c.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            {/* Brand */}
-            <FormField
-              control={form.control}
-              name="brandId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Ram</FormLabel>
+          {/* RAMs */}
+          <FormField
+            control={form.control}
+            name="rams"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>RAMs</FormLabel>
+                <FormControl>
                   <Select
-                    value={field.value}
+                    value={field.value.toString()}
                     onValueChange={(value) => field.onChange(value)}
                   >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Ram" />
-                      </SelectTrigger>
-                    </FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select RAMs" />
+                    </SelectTrigger>
                     <SelectContent>
-                      {dummyBrands.map((brand) => (
-                        <SelectItem key={brand.id} value={brand.id}>
-                          {brand.name}
+                      {rams?.data?.map((r) => (
+                        <SelectItem key={r.id} value={String(r.id)}>
+                          {r.size}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            {/* Condition */}
-            <FormField
-              control={form.control}
-              name="condition"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Rom</FormLabel>
+          {/* ROMs */}
+          <FormField
+            control={form.control}
+            name="roms"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>ROMs</FormLabel>
+                <FormControl>
                   <Select
-                    value={field.value}
-                    onValueChange={(value) =>
-                      field.onChange(value as ProductFormValues['condition'])
-                    }
+                    value={field.value.toString()}
+                    onValueChange={(value) => field.onChange(value)}
                   >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Rom" />
-                      </SelectTrigger>
-                    </FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select ROMs" />
+                    </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Refurbished">32gb</SelectItem>
-                      <SelectItem value="Fairly used"></SelectItem>
+                      {roms?.data?.map((r) => (
+                        <SelectItem key={r.id} value={String(r.id)}>
+                          {r.size}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           {/* Switches */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -371,7 +372,6 @@ export function AddProductForm() {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="trueToneAvailable"
@@ -387,7 +387,6 @@ export function AddProductForm() {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="faceIdAvailable"
@@ -404,6 +403,7 @@ export function AddProductForm() {
               )}
             />
           </div>
+
           {/* Image Upload */}
           <FormItem>
             <FormLabel>Upload Images</FormLabel>
@@ -420,7 +420,7 @@ export function AddProductForm() {
                 <img
                   key={i}
                   src={src}
-                  alt="preview"
+                  alt={`preview-${i}`}
                   className="w-20 h-20 object-cover rounded"
                 />
               ))}
@@ -433,20 +433,17 @@ export function AddProductForm() {
             name="specification"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Specification (JSON)</FormLabel>
+                <FormLabel>Specification (JSON string)</FormLabel>
                 <FormControl>
-                  <Textarea
-                    placeholder='{"screenSize":"6.5 inches"}'
-                    {...field}
-                  />
+                  <Textarea placeholder='{"key":"value"}' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          <Button type="submit" className="w-full">
-            Save Product
+          <Button type="submit" disabled={loading} className="w-full">
+            {loading ? 'Saving...' : 'Save Product'}
           </Button>
         </form>
       </Form>
