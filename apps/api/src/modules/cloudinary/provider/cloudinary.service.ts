@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { v2 as cloudinary } from 'cloudinary';
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
+import toStream = require('buffer-to-stream');
 
 @Injectable()
 export class CloudinaryService implements OnModuleInit {
@@ -16,6 +17,29 @@ export class CloudinaryService implements OnModuleInit {
     });
 
     axiosRetry(axios, { retries: 3 });
+  }
+
+  async uploadToCloudinary(file: Express.Multer.File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          folder: 'products',
+        },
+        (error, result) => {
+          if (error) return reject(error);
+          resolve(result.secure_url);
+        },
+      );
+
+      toStream(file.buffer).pipe(uploadStream);
+    });
+  }
+
+  async uploadMultipleToCloudinary(
+    files: Express.Multer.File[],
+  ): Promise<string[]> {
+    console.log('😀', files);
+    return Promise.all(files.map((file) => this.uploadToCloudinary(file)));
   }
 
   async uploadVendorImageToCloudinary(filePath: string) {

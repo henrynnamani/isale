@@ -7,20 +7,9 @@ import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import useDashboard from '@/store/dashboard';
 import Dashboard from '@/components/dashboard/Dashboard';
 import Products from '@/components/dashboard/Products';
-import { parseCookies } from 'nookies';
-import { useEffect } from 'react';
-import api from '@/axios-base';
 
 export default function Page() {
   const currentPage = useDashboard((state) => state.currentPage);
-  const cookies = parseCookies();
-
-  console.log(cookies);
-
-
-  useEffect(() => {
-    api.defaults.headers['authorization'] = `Bearer ${cookies.accessToken}`;
-  }, [cookies]);
 
   const pageMap: Record<string, React.ElementType> = {
     Dashboard,

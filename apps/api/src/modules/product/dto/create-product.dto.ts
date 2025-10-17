@@ -63,7 +63,7 @@ export class CreateProductDto {
   })
   @IsUUID()
   @IsNotEmpty()
-  categoryId: string; 
+  categoryId: string;
 
   @ApiProperty({
     example: [
@@ -87,14 +87,6 @@ export class CreateProductDto {
   @IsUUID()
   @IsNotEmpty()
   brandId: string;
-
-  @ApiProperty({
-    example: 2,
-    description: 'In stock',
-  })
-  @IsInt()
-  @IsNotEmpty()
-  stock: number;
 
   @ApiProperty({
     example: [
