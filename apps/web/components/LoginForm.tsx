@@ -12,11 +12,49 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from './lib/utils';
 import { authClient } from '@/auth-client';
+import { useState } from 'react';
+import api from '@/axios-base';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
+import { setCookie, parseCookies, destroyCookie } from 'nookies';
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<'div'>) {
+  const router = useRouter();
+  const [loginDetail, setLoginDetail] = useState({
+    email: '',
+    password: '',
+  });
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await api.post('/auth/signin', loginDetail, {
+        withCredentials: true,
+      });
+
+      setCookie(null, 'accessToken', response?.data.data.access_token, {
+        maxAge: 30 * 60 * 60,
+        path: '/',
+      });
+
+      setCookie(null, 'refreshToken', response?.data.data.refresh_token, {
+        maxAge: 30 * 24 * 60 * 60,
+        path: '/',
+      });
+
+      router.push('/');
+    } catch (err) {
+      console.log(err);
+      toast.error('Login Failed', {
+        position: 'top-center',
+      });
+    }
+  };
+
   const signIn = async () => {
     const data = await authClient.signIn.social({
       provider: 'google',
@@ -59,6 +97,9 @@ export function LoginForm({
                     id="email"
                     type="email"
                     placeholder="m@example.com"
+                    onChange={(e) =>
+                      setLoginDetail({ ...loginDetail, email: e.target.value })
+                    }
                     required
                   />
                 </div>
@@ -72,9 +113,19 @@ export function LoginForm({
                       Forgot your password?
                     </a>
                   </div>
-                  <Input id="password" type="password" required />
+                  <Input
+                    id="password"
+                    type="password"
+                    required
+                    onChange={(e) =>
+                      setLoginDetail({
+                        ...loginDetail,
+                        password: e.target.value,
+                      })
+                    }
+                  />
                 </div>
-                <Button type="submit" className="w-full">
+                <Button onClick={handleLogin} type="submit" className="w-full">
                   Login
                 </Button>
               </div>

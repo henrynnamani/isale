@@ -1,29 +1,8 @@
 'use client';
 
-import {
-  BellIcon,
-  Building,
-  Handbag,
-  HomeIcon,
-  List,
-  ListFilter,
-  ListIcon,
-  Package,
-  SearchIcon,
-  ShoppingBag,
-} from 'lucide-react';
+import { ListFilter, Package, SearchIcon } from 'lucide-react';
 import Link from 'next/link';
 import React, { useState } from 'react';
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet';
 import { Button } from './ui/button';
 import {
   Drawer,
@@ -44,6 +23,7 @@ import {
 } from './ui/select';
 import { Input } from './ui/input';
 import { Slider } from './ui/slider';
+import Auth from './Auth';
 
 const Header = () => {
   const [cartItems, setCartItems] = useState([
@@ -97,7 +77,6 @@ const Header = () => {
             </div>
           </div>
         </div>
-        <BellIcon size={18} className="hidden md:flex" />
         <Drawer>
           <DrawerTrigger>
             <ListFilter size={20} className="md:hidden flex" />
@@ -189,9 +168,7 @@ const Header = () => {
             <span className="font-medium">Orders</span>
           </Link>
         </div>
-        <div className="bg-blue-400 rounded-full items-center justify-center w-30 h-12 hidden md:flex">
-          <span className="text-white font-bold">Login</span>
-        </div>
+        <Auth />
       </div>
     </div>
   );

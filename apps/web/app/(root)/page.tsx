@@ -24,14 +24,11 @@ const page = () => {
     <div className="gap-8 space-y-8">
       <Hero />
       <ProductCategory
-        label="Discount Product"
+        label="Featured Product"
         products={discountProducts}
         isLoading={isLoading}
       />
-      <ProductDiscovery
-        isLoading={isLoading}
-        products={data && data?.data}
-      />
+      <ProductDiscovery isLoading={isLoading} products={data && data?.data} />
     </div>
   );
 };

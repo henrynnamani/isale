@@ -1,0 +1,27 @@
+[
+    {
+      "id": 1,
+      "header": "Iphone 12 Pro",
+      "type": "smartphone",
+      "status": "available",
+      "price": "1,000,000",
+      "vendor": "Vintech store"
+    },
+    {
+      "id": 2,
+      "header": "Iphone 13",
+      "type": "smartphone",
+      "status": "not available",
+      "price": "650,000",
+      "vendor": "PrimeLine"
+    },
+    {
+      "id": 3,
+      "header": "Iphone 15 pro",
+      "type": "smartphone",
+      "status": "available",
+      "price": "820,000",
+      "vendor": "Vintech store"
+    }
+  ]
+  

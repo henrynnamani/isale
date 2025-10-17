@@ -1,11 +1,12 @@
 import { ProductCondition } from '@/shared/enum/product-condition.enum';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
   IsEnum,
   IsInt,
+  IsJSON,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -32,14 +33,14 @@ export class CreateProductDto {
   @IsNotEmpty()
   available: boolean;
 
-  // @ApiPropertyOptional({
-  //   example: '{"screenSize":"6.5 inches","battery":"4000mAh"}',
-  //   description: 'JSON string describing product specifications',
-  //   type: String,
-  // })
-  // @IsJSON()
-  // @IsOptional()
-  // specification: string;
+  @ApiPropertyOptional({
+    example: '{"screenSize":"6.5 inches","battery":"4000mAh"}',
+    description: 'JSON string describing product specifications',
+    type: String,
+  })
+  @IsJSON()
+  @IsOptional()
+  specification: string;
 
   @ApiProperty({
     example: [
@@ -62,7 +63,7 @@ export class CreateProductDto {
   })
   @IsUUID()
   @IsNotEmpty()
-  categoryId: string;
+  categoryId: string; 
 
   @ApiProperty({
     example: [

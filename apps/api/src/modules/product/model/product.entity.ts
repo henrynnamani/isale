@@ -51,7 +51,7 @@ export class Product extends BaseModel {
     nullable: true,
     default: false,
   })
-  onDiscount: boolean;
+  isFeatured: boolean;
 
   @Column({
     type: 'boolean',
@@ -67,11 +67,11 @@ export class Product extends BaseModel {
   })
   faceId: boolean;
 
-  // @Column({
-  //   type: 'jsonb',
-  //   nullable: true,
-  // })
-  // specification: Record<string, any>;
+  @Column({
+    type: 'jsonb',
+    nullable: true,
+  })
+  specification: Record<string, any>;
 
   @ManyToOne(() => Category, (category) => category.products, { eager: true })
   category: Category;

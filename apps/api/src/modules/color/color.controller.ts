@@ -1,9 +1,9 @@
-import { Body, Controller, Delete, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { ColorService } from './provider/color.service';
 import { CreateColorDto } from './dto/create-color.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { deleteColorDoc } from './doc/delete-color.doc';
-import { CreateDoc } from '@/shared/doc-response';
+import { CreateDoc, CreateGetDoc } from '@/shared/doc-response';
 import { DeleteColorDto } from './dto/delete-color.dto';
 
 @ApiTags('color')
@@ -22,5 +22,11 @@ export class ColorController {
   @CreateDoc('Delete color', DeleteColorDto)
   deleteColor(@Param() deleteColorDto: DeleteColorDto) {
     return this.colorService.deleteColor(deleteColorDto.id);
+  }
+
+  @Get()
+  @CreateGetDoc('Get colors', CreateColorDto)
+  getColors() {
+    return this.colorService.getAllColor();
   }
 }

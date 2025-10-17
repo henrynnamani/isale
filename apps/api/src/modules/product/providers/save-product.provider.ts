@@ -57,9 +57,9 @@ export class SaveProductProvider {
       name: createProductDto.name,
       price: createProductDto.price,
       vendor,
-      // specification:
-      //   createProductDto.specification ??
-      //   JSON.parse(createProductDto.specification),
+      specification:
+        createProductDto.specification ??
+        JSON.parse(createProductDto.specification),
     };
 
     try {

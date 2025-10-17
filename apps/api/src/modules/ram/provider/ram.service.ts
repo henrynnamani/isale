@@ -1,7 +1,6 @@
 import {
   BadRequestException,
   Injectable,
-  NotFoundException,
   RequestTimeoutException,
 } from '@nestjs/common';
 import { Repository } from 'typeorm';

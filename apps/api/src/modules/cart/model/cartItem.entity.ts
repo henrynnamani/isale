@@ -12,7 +12,4 @@ export class CartItem extends BaseModel {
   @ManyToOne(() => Product, { eager: true })
   @JoinColumn({ name: 'productId' })
   product: Product;
-
-  @Column({ type: 'int', default: 1 })
-  quantity: number;
 }

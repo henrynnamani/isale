@@ -38,6 +38,21 @@ export class BrandService {
     }
   }
 
+  async getBrands() {
+    try {
+      const brands = await this.brandRepository.find();
+
+      return {
+        data: brands,
+        message: SYS_MSG.BRAND_LIST_FETCHED_SUCCESSFULLY,
+      };
+    } catch (err) {
+      throw new RequestTimeoutException(err, {
+        description: SYS_MSG.DB_CONNECTION_ERROR,
+      });
+    }
+  }
+
   async deleteBrand(id: string) {
     const brand = await this.brandExistProvider.checkBrandNotExist({ id });
 

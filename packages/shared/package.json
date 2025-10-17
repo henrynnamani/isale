@@ -1,0 +1,14 @@
+{
+    "name": "@isale/shared",
+    "version": "1.0.0",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsup src/index.ts --out-dir dist --format esm,cjs --dts"
+      },
+    "devDependencies": {
+      "typescript": "^5.4.0",
+      "tsup": "^8.0.0"
+    }
+  }
+  
