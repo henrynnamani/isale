@@ -20,6 +20,7 @@ export const BRAND_CREATED_SUCCESSFULLY = 'Brand successfully created';
 export const BRAND_DELETED_SUCCESSFULLY = 'Brand successfully deleted';
 export const BRAND_DOES_NOT_EXIST = (brand: string) =>
   `Brand: ${brand} does not exist`;
+export const BRAND_LIST_FETCHED_SUCCESSFULLY = 'Brands fetched successfully';
 
 export const RAM_CREATED_SUCCESSFULLY = 'Ram successfully created';
 export const RAM_ALREADY_EXIST = 'Ram already eixst';
@@ -78,4 +79,4 @@ export const EXPIRED_OTP = 'Otp has expired';
 export const INVALID_CREDENTIAL = 'Invalid credential';
 export const SIGN_IN = 'Sign in successfully';
 export const USER_EMAIL_UNVERIFIED = 'Email not verified';
-export const INVALID_TOKEN = 'Invalid token'
+export const INVALID_TOKEN = 'Invalid token';

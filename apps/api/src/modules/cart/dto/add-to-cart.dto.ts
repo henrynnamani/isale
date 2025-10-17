@@ -17,12 +17,4 @@ export class AddToCartDto {
   @IsString()
   @IsNotEmpty()
   productId: string;
-
-  @ApiProperty({
-    example: 3,
-    description: 'quantity of product',
-  })
-  @IsNumber()
-  @IsNotEmpty()
-  quantity: number;
 }

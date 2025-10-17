@@ -1,19 +1,14 @@
 'use client';
 
-import * as React from 'react';
+import { useState } from 'react';
 import {
   IconCamera,
   IconChartBar,
   IconDashboard,
-  IconDatabase,
   IconFileAi,
   IconFileDescription,
-  IconFileWord,
-  IconFolder,
-  IconHelp,
   IconInnerShadowTop,
   IconListDetails,
-  IconReport,
   IconSearch,
   IconSettings,
   IconUsers,
@@ -30,6 +25,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
+import useDashboard from '@/store/dashboard';
 
 const data = {
   user: {
@@ -63,7 +59,7 @@ const data = {
     {
       title: 'Capture',
       icon: IconCamera,
-      isActive: true,
+      isActive: false,
       url: '#',
       items: [
         {
@@ -114,11 +110,6 @@ const data = {
       icon: IconSettings,
     },
     {
-      title: 'Get Help',
-      url: '#',
-      icon: IconHelp,
-    },
-    {
       title: 'Search',
       url: '#',
       icon: IconSearch,
@@ -127,6 +118,13 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const setCurrentPage = useDashboard((state) => state.setCurrentPage);
+  const currentPage = useDashboard((state) => state.currentPage);
+
+  const handleNavClick = (title: string) => {
+    setCurrentPage(title);
+  };
+
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -138,14 +136,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             >
               <a href="#">
                 <IconInnerShadowTop className="!size-5" />
-                <span className="text-base font-semibold">Graey.co</span>
+                <span className="text-base font-semibold">Isale.co</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain
+          items={data.navMain.map((item) => ({
+            ...item,
+            isActive: item.title === currentPage, // 🔥 set active
+            onClick: () => handleNavClick(item.title), // handle click
+          }))}
+        />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>

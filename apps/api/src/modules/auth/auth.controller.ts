@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Res } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { RegisterDto } from './dto/register.dto';
 import { AuthService } from './provider/auth.service';
@@ -8,6 +8,7 @@ import { OtpService } from '../otp/provider/otp.service';
 import { LoginDto } from './dto/login.dto';
 import { skipAuth } from '@/shared/decorators';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { Response } from 'express';
 
 @Controller('auth')
 @ApiTags('auth')

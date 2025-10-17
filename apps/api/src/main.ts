@@ -4,6 +4,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { APP_NAME } from './constant';
 import { LoggingInterceptor } from './shared/interceptor/request-log.interceptor';
+import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -16,7 +17,12 @@ async function bootstrap() {
     }),
   );
 
-  app.enableCors();
+  app.use(cookieParser());
+
+  app.enableCors({
+    origin: 'http://localhost:3001',
+    credentials: true,
+  });
 
   app.useGlobalInterceptors(new LoggingInterceptor());
 

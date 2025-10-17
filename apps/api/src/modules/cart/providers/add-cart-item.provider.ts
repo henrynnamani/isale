@@ -18,7 +18,6 @@ export class AddCartItemProvider {
       const item = this.cartItemRepository.create({
         cart,
         product: { id: cartItem.productId },
-        quantity: cartItem.quantity,
       });
 
       await this.cartItemRepository.save(item);

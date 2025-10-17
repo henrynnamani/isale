@@ -3,6 +3,7 @@ import {
   ConflictException,
   Injectable,
   RequestTimeoutException,
+  Res,
   UnauthorizedException,
 } from '@nestjs/common';
 import { RegisterDto } from '../dto/register.dto';
@@ -17,6 +18,7 @@ import { RefreshTokenDto } from '../dto/refresh-token.dto';
 import * as bcrypt from 'bcryptjs';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {

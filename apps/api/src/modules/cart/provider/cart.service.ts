@@ -17,7 +17,7 @@ export class CartService {
     private readonly addCartItemProvider: AddCartItemProvider,
   ) {}
   async addToCart(addToCartDto: AddToCartDto) {
-    const { productId, userId, quantity } = addToCartDto;
+    const { productId, userId } = addToCartDto;
 
     try {
       let cart = await this.cartExist.checkCartExist(userId);
@@ -31,18 +31,12 @@ export class CartService {
         cart = await this.cartRepository.save(cart);
       }
 
-      let item = cart.items.find((item) => item.product.id === productId);
+      const newItem = await this.addCartItemProvider.addCartItem(
+        cart,
+        addToCartDto,
+      );
 
-      if (item) {
-        item.quantity = quantity;
-      } else {
-        const newItem = await this.addCartItemProvider.addCartItem(
-          cart,
-          addToCartDto,
-        );
-
-        cart.items.push(newItem);
-      }
+      cart.items.push(newItem);
 
       const result = await this.cartRepository.save(cart);
 

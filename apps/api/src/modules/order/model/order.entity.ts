@@ -12,7 +12,7 @@ export class Order extends BaseModel {
   user: User;
 
   @ManyToOne(() => Vendor, (vendor) => vendor.orders)
-  vendor: Vendor;
+  vendor: Vendor; 
 
   @Column({
     type: 'numeric',
